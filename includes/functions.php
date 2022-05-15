@@ -162,13 +162,7 @@ function _error()
                 global $smarty;
                 header('HTTP/1.0 404 Not Found');
                 $title = "404 Not Found";
-                $message = "Sorry but the page you are looking for does not exist, have been removed. name changed or is temporarily unavailable";
-                if (DEBUGGING) {
-                    $backtrace = debug_backtrace();
-                    $line = $backtrace[0]['line'];
-                    $file = $backtrace[0]['file'];
-                    $message .= "<br><br><small>This error function was called from line $line in file $file</small>";
-                }
+                $message = "Lo siento la página a la que intentas acceder no existe";
                 if (isset($smarty)) {
                     $smarty->assign('message', $message);
                     page_header($title);
@@ -558,5 +552,21 @@ function valid_extension($extension, $allowed_extensions)
         return true;
     }
     return false;
+}
+
+
+/**
+ * 
+ * valid_category
+ * */
+
+function valid_category($id){
+    global $db;
+
+    $get_category = $db->query("SELECT * FROM categories WHERE category_id = ".$id);
+    if($get_category->num_rows> 0)
+        return true;
+    else
+        return false;
 }
 ?>

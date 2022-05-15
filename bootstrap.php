@@ -16,10 +16,10 @@ define('ABSPATH', dirname(__FILE__) . '/');
 define('BASEPATH', dirname($_SERVER['PHP_SELF']));
 
 // check the config file
-if (!file_exists(ABSPATH . 'includes/config.php')) {
+//if (!file_exists(ABSPATH . 'includes/config.php')) {
     /* the config file doesn't exist -> start the installer */
-    header('Location: ./install');
-}
+/*    header('Location: ./install');
+}*/
 
 
 // get system configurations

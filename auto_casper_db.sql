@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-05-2022 a las 06:08:27
+-- Tiempo de generación: 15-05-2022 a las 17:15:36
 -- Versión del servidor: 10.4.22-MariaDB
 -- Versión de PHP: 7.3.28
 
@@ -24,17 +24,45 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `categories`
+--
+
+CREATE TABLE `categories` (
+  `category_id` int(11) NOT NULL,
+  `category_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `clients`
+--
+
+CREATE TABLE `clients` (
+  `client_id` int(11) NOT NULL,
+  `client_name` varchar(255) NOT NULL,
+  `client_contact` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `products`
 --
 
 CREATE TABLE `products` (
   `product_id` int(11) NOT NULL,
-  `product_name` varchar(100) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
   `product_marca` varchar(50) NOT NULL,
   `product_description` varchar(500) NOT NULL,
   `product_price` decimal(13,2) NOT NULL,
   `product_image` varchar(255) NOT NULL,
-  `product_quantity` int(11) NOT NULL
+  `product_quantity` int(11) NOT NULL,
+  `product_category` int(11) NOT NULL,
+  `product_status` tinyint(1) NOT NULL DEFAULT 1,
+  `product_price_bs` decimal(13,2) NOT NULL,
+  `product_price_sale` decimal(13,2) NOT NULL,
+  `product_price_sale_bs` decimal(13,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -59,12 +87,14 @@ CREATE TABLE `providers` (
 CREATE TABLE `purchases` (
   `purchase_id` int(11) NOT NULL,
   `purchase_provider` int(11) NOT NULL,
-  `purchase_date` date NOT NULL,
+  `purchase_date` date DEFAULT NULL,
   `purchase_date_finish` date DEFAULT NULL,
   `purchase_amount` decimal(13,2) NOT NULL,
+  `purchase_amount_bs` decimal(13,2) NOT NULL,
   `purchase_method` varchar(64) NOT NULL,
   `purchase_invoice` varchar(20) NOT NULL,
-  `purchase_user` int(11) NOT NULL
+  `purchase_user` int(11) NOT NULL,
+  `purchase_status` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -79,7 +109,8 @@ CREATE TABLE `purchase_detail` (
   `detail_price_unit` decimal(13,2) NOT NULL,
   `detail_quantity` int(11) NOT NULL,
   `detail_sub_total` decimal(13,2) NOT NULL,
-  `purchase_id` int(11) NOT NULL
+  `purchase_id` int(11) NOT NULL,
+  `detail_price_unit_bs` decimal(13,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -93,7 +124,9 @@ CREATE TABLE `sales` (
   `sale_date` date NOT NULL,
   `sale_client` int(11) NOT NULL,
   `sale_amount` decimal(13,2) NOT NULL,
-  `sale_user` int(11) NOT NULL
+  `sale_user` int(11) NOT NULL,
+  `sale_amount_bs` decimal(13,2) NOT NULL,
+  `sale_status` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -108,8 +141,29 @@ CREATE TABLE `sale_detail` (
   `detail_price_unit` decimal(13,2) NOT NULL,
   `detail_quantity` int(11) NOT NULL,
   `detail_sub_total` decimal(13,2) NOT NULL,
-  `sale_id` int(11) NOT NULL
+  `sale_id` int(11) NOT NULL,
+  `detail_price_unit_bs` decimal(13,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `system_option`
+--
+
+CREATE TABLE `system_option` (
+  `option_id` int(11) NOT NULL,
+  `option_name` varchar(64) NOT NULL,
+  `option_value` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `system_option`
+--
+
+INSERT INTO `system_option` (`option_id`, `option_name`, `option_value`) VALUES
+(1, 'install', '0'),
+(2, 'tasa_dolar', '4');
 
 -- --------------------------------------------------------
 
@@ -120,17 +174,29 @@ CREATE TABLE `sale_detail` (
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `user_name` varchar(64) NOT NULL,
-  `user_password` int(100) NOT NULL,
-  `user_firstname` int(64) NOT NULL,
-  `user_lastname` int(64) NOT NULL,
+  `user_password` varchar(100) NOT NULL,
+  `user_firstname` varchar(64) NOT NULL,
+  `user_lastname` varchar(64) NOT NULL,
   `user_active` tinyint(1) NOT NULL DEFAULT 1,
-  `user_admin` int(11) NOT NULL DEFAULT 0,
+  `user_admin` tinyint(1) NOT NULL DEFAULT 0,
   `user_created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_id`);
+
+--
+-- Indices de la tabla `clients`
+--
+ALTER TABLE `clients`
+  ADD PRIMARY KEY (`client_id`);
 
 --
 -- Indices de la tabla `products`
@@ -170,6 +236,12 @@ ALTER TABLE `sale_detail`
   ADD PRIMARY KEY (`sale_detail_id`);
 
 --
+-- Indices de la tabla `system_option`
+--
+ALTER TABLE `system_option`
+  ADD PRIMARY KEY (`option_id`);
+
+--
 -- Indices de la tabla `users`
 --
 ALTER TABLE `users`
@@ -178,6 +250,18 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `clients`
+--
+ALTER TABLE `clients`
+  MODIFY `client_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `products`
@@ -214,6 +298,12 @@ ALTER TABLE `sales`
 --
 ALTER TABLE `sale_detail`
   MODIFY `sale_detail_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `system_option`
+--
+ALTER TABLE `system_option`
+  MODIFY `option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `users`

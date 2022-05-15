@@ -11,6 +11,7 @@ class User
 {
 
     public $_logged_in = false;
+    // public $username = "";
     // public $_is_admin = false;
 
     private $_cookie_user_id = "c_user";
@@ -52,19 +53,12 @@ class User
      * @param array $args
      * @return void
      */
-    public function sign_up($args = [])
+    public function sign_up($args = [], $admin)
     {
+
         global $db, $date;
-        /* check invitation code */
-        // if ($system['invitation_enabled']) {
-        //     if (!$this->check_invitation_code($args['invitation_code'])) {
-        //         throw new Exception(__("The invitation code is invalid or expired"));
-        //     }
-        // }
-        //identifi
-        /* check IP */
-        // $this->_check_ip();
-        if (is_empty($args['first_name']) || is_empty($args['last_name']) || is_empty($args['username']) || is_empty($args['password']) || is_empty($args['email'])) {
+
+        if (is_empty($args['firstname']) || is_empty($args['lastname']) || is_empty($args['username']) || is_empty($args['password'])) {
             throw new Exception("Debe completar todos sus datos");
         }
 
@@ -77,35 +71,16 @@ class User
         if ($this->check_username($args['username'])) {
             throw new Exception("Lo siento, ya este username existe");
         }
-        if (!valid_email($args['email'])) {
-            throw new Exception("Por favor ingrese un correo válido");
-        }
 
-        if ($this->check_email($args['email'])) {
-            throw new Exception("Lo siento este correo ya esta siendo usado");
-        }
-        /*
-        if ($system['activation_enabled'] && $system['activation_type'] == "sms") {
-            if (is_empty($args['phone'])) {
-                throw new Exception("Please enter a valid phone number");
-            }
-            $args['phone'] = $args['phone_code'] . $args['phone'];
-            if ($this->check_phone($args['phone'])) {
-                throw new Exception("Sorry, it looks like") . " <strong>" . $args['phone'] . "</strong> " . "belongs to an existing account");
-            }
-        } else {
-            $args['phone'] = 'null';
-        }
-        */
         if (strlen($args['password']) < 6) {
             throw new Exception("Tu contraseña debe tener mínimo 6 caracteres");
         }
 
-        if (!valid_name($args['first_name'])) {
+        if (!valid_name($args['firstname'])) {
             throw new Exception("Tu primer nombre contiene caracteres inválidos");
         }
 
-        if (!valid_name($args['last_name'])) {
+        if (!valid_name($args['lastname'])) {
             throw new Exception("Tu apellido contiene caracteres inválidos");
         }
 
@@ -113,16 +88,22 @@ class User
         /* register user */
         $db->query(sprintf("
             INSERT INTO users (user_name,
-                               user_email,
                                user_password,
                                user_firstname,
-                               user_lastname) 
-            VALUES (%s, %s, %s, %s, %s)",
+                               user_lastname,
+                               user_admin,
+                               user_created_at) 
+            VALUES (%s, %s, %s, %s, %s, %s)",
                                secure($args['username']),
-                               secure($args['email']),
                                secure(_password_hash($args['password'])),
-                               secure(ucwords($args['first_name'])),
-                               secure(ucwords($args['last_name'])))) or _error("SQL_ERROR_THROWEN");
+                               secure(ucwords($args['firstname'])),
+                               secure(ucwords($args['lastname'])),
+                                secure($args['username']),
+                                secure($date))) or _error("SQL_ERROR_THROWEN");
+
+        if($admin){
+            $db->query("UPDATE system_option SET option_value =1 WHERE option_name = 'install'");
+        }
         
         return true;
     }
@@ -201,7 +182,7 @@ class User
         }
         /* check password */
         if (!password_verify($password, $user['user_password'])) {
-            throw new Exception("<p><strong>" . "Contraseña incorrecta" . "</strong></p>");
+            throw new Exception("Contraseña incorrecta");
         }
         
         // set_authentication_cookies:
@@ -498,6 +479,561 @@ class User
             default:
                 _error('SQL_ERROR_THROWEN');
         }
+    }
+
+
+    /**
+     * 
+     * get_products
+     * @param float
+     * 
+     * */
+
+    public function get_products($tasa){
+        global $db;
+
+        $products = [];
+        $get_products = $db->query("SELECT * FROM products P LEFT JOIN categories C ON P.product_category = C.category_id");
+
+        if($get_products->num_rows > 0){
+            while($row = $get_products->fetch_assoc()){
+                $row['product_price_bs'] = $row['product_price'] * $tasa;
+                $row['product_price_sale_bs'] = $row['product_price_sale'] * $tasa;
+
+                $products[] = $row;
+            }
+        }
+
+        return $products;
+    }
+
+    /**
+     * 
+     * get_product
+     * @param int
+     * 
+     * */
+
+    public function get_product($id){
+        global $db;
+
+        $get_tasa = ($db->query("SELECT * FROM system_option WHERE option_name = 'tasa_dolar'"))->fetch_assoc();
+        $tasa = $get_tasa['option_value'];
+        $get_product = $db->query("SELECT * FROM products P LEFT JOIN categories C ON P.product_category = C.category_id WHERE product_id = $id");
+
+        if($get_product->num_rows > 0){
+            $product = $get_product->fetch_assoc();
+            $product['product_price_bs'] = $product['product_price'] * $tasa;
+            $product['product_price_sale_bs'] = $product['product_price_sale'] * $tasa;
+        } else
+            $product = false;
+
+        return $product;
+    }
+
+
+    /**
+     * 
+     * register_product
+     * @param array
+     * 
+     * */
+
+    public function register_product($args = []){
+        global $db;
+
+        if(is_empty($args['name']) || is_empty($args['marca']) || is_empty($args['price']) || is_empty($args['price_sale']) || is_empty($args['quantity']) || is_empty($args['category']))
+            throw new Exception("Debe completar todos los datos obligatorios");
+
+        if(strlen($args['description']) > 500)
+            throw new Exception("La descripción no debe exceder los 500 caracteres");
+
+        if(!is_numeric($args['price']))
+            throw new Exception("El precio debe ser numérico");
+
+        if(!is_numeric($args['price_sale']))
+            throw new Exception("El precio debe ser numérico");
+
+        if(!is_numeric($args['quantity']))
+            throw new Exception("La cantidad debe ser numérica");
+
+        if(!valid_category($args['category']))
+            throw new Exception("La categoría seleccionada es inválida");
+
+        if($args['price'] <= 0 || $args['price_sale'] <= 0)
+            throw new Exception("El precio debe ser mayor a 0");
+
+        if($args['quantity'] <= 0)
+            throw new Exception("La cantidad debe ser mayor a 0");
+
+        if($args['price_sale'] < $args['price'])
+            throw new Exception("El precio debe de venta no puede ser menor al precio de proveedor");
+
+        $db->query(sprintf("INSERT INTO products (product_name,
+                                                    product_marca,
+                                                    product_price,
+                                                    product_price_sale,
+                                                    product_category,
+                                                    product_image,
+                                                    product_description) VALUES 
+                                                    (%s, %s, %s, %s, %s, %s, %s)",
+                                                    secure($args['name']),
+                                                    secure($args['marca']),
+                                                    secure($args['price']),
+                                                    secure($args['price_sale']),
+                                                    secure($args['category']),
+                                                    secure($args['photo']),
+                                                    secure($args['description']),)) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+    /**
+     * 
+     * upgrade_product
+     * @param args
+     * 
+     * */
+
+    public function upgrade_product($args = []){
+        global $db;
+
+        if(is_empty($args['price']) || is_empty($args['price_sale']) || is_empty($args['quantity']))
+            throw new Exception("Debe completar todos los datos obligatorios");
+
+        if(!is_numeric($args['price']))
+            throw new Exception("El precio debe ser numérico");
+
+        if(!is_numeric($args['price_sale']))
+            throw new Exception("El precio debe ser numérico");
+
+        if(!is_numeric($args['quantity']))
+            throw new Exception("La cantidad debe ser numérica");
+
+        if($args['price'] <= 0 || $args['price_sale'] <= 0)
+            throw new Exception("El precio debe ser mayor a 0");
+
+        if($args['quantity'] <= 0)
+            throw new Exception("La cantidad debe ser mayor a 0");
+
+        if($args['price_sale'] < $args['price'])
+            throw new Exception("El precio debe de venta no puede ser menor al precio de proveedor");
+
+        $db->query(sprintf("UPDATE products SET product_price = %s, product_price_sale = %s WHERE product_id = %s", 
+                            secure($args['price']),
+                            secure($args['price_sale']),
+                            secure($args['product_id_new']))) or _error("SQL_ERROR_THROWEN");
+    }
+
+    /***************************************
+     * 
+     * PROVIDERS
+     * 
+     * *************************************/
+
+    /**
+     * 
+     * get_providers
+     * 
+     * */
+
+    public function get_providers(){
+        global $db;
+
+        $providers = [];
+        $get_providers = $db->query("SELECT * FROM providers");
+
+        if($get_providers->num_rows > 0){
+            while($row = $get_providers->fetch_assoc()){
+                $providers[] = $row; 
+            }
+        }
+
+        return $providers;
+    }
+
+    /**
+     * 
+     * get_provider
+     * @param int
+     * 
+     * */
+
+    public function get_provider($id){
+        global $db;
+
+        $get_provider = $db->query("SELECT * FROM providers WHERE provider_id = $id");
+
+        $provider = $get_provider->fetch_assoc();
+
+        return $provider;
+    }
+
+    /**
+     * 
+     * register_provider
+     * @param array
+     * 
+     * */
+
+    public function register_provider($args = []){
+        global $db;
+
+        if(is_empty($args['name']) || is_empty($args['contact']) || is_empty($args['ubication']))
+            throw new Exception("Debe completar todos los datos");
+
+        $db->query(sprintf("INSERT INTO providers (provider_name,
+                                                    provider_contact,
+                                                    provider_ubication) VALUES 
+                                                    (%s, %s, %s)",
+                                                    secure($args['name']),
+                                                    secure($args['contact']),
+                                                    secure($args['ubication']),)) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+    /**
+     * 
+     * edit_provider
+     * @param array
+     * 
+     * */
+
+    public function edit_provider($args = [], $id){
+        global $db;
+
+        if(is_empty($args['name']) || is_empty($args['contact']) || is_empty($args['ubication']))
+            throw new Exception("Debe completar todos los datos");
+
+        $db->query(sprintf("UPDATE providers SET provider_name = %s,
+                                                    provider_contact = %s,
+                                                    provider_ubication = %s WHERE provider_id = %s",
+                                                    secure($args['name']),
+                                                    secure($args['contact']),
+                                                    secure($args['ubication']),
+                                                    secure($id),)) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+    /**
+     * 
+     * delete_provider
+     * @param array
+     * 
+     * */
+
+    public function delete_provider($id){
+        global $db;
+
+        $db->query(sprintf("DELETE FROM providers WHERE provider_id = %s",
+                                                    secure($id),)) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+
+
+    /***************************************
+     * 
+     * CATEGORIES
+     * 
+     * *************************************/
+
+    /**
+     * 
+     * get_categories
+     * 
+     * */
+
+    public function get_categories(){
+        global $db;
+
+        $categories = [];
+        $get_categories = $db->query("SELECT * FROM categories");
+
+        if($get_categories->num_rows > 0){
+            while($row = $get_categories->fetch_assoc()){
+                $categories[] = $row; 
+            }
+        }
+
+        return $categories;
+    }
+
+    /**
+     * 
+     * get_category
+     * 
+     * */
+
+    public function get_category($id){
+        global $db;
+
+        $get_category = $db->query("SELECT * FROM categories WHERE category_id = $id");
+
+        $category = $get_category->fetch_assoc();        
+
+        return $category;
+    }
+
+    /**
+     * 
+     * register_category
+     * @param array
+     * 
+     * */
+
+    public function register_category($args = []){
+        global $db;
+
+        if(is_empty($args['name']))
+            throw new Exception("Debe completar todos los datos");
+
+        $db->query(sprintf("INSERT INTO categories (category_name) VALUES 
+                                                    (%s)",
+                                                    secure($args['name']),)) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+    /**
+     * 
+     * edit_category
+     * @param array
+     * 
+     * */
+
+    public function edit_category($args = [], $id){
+        global $db;
+
+        if(is_empty($args['name']))
+            throw new Exception("Debe completar todos los datos");
+
+        $db->query(sprintf("UPDATE categories SET category_name = %s WHERE category_id = %s",
+                                                    secure($args['name']),
+                                                    secure($id),)) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+    /**
+     * 
+     * delete_category
+     * @param array
+     * 
+     * */
+
+    public function delete_category($id){
+        global $db;
+
+        $db->query(sprintf("DELETE FROM categories WHERE category_id = %s",
+                                                    secure($id),)) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+    /***************************************
+     * 
+     * PURCHASES
+     * 
+     * *************************************/
+
+    /**
+     * 
+     * get_purchases
+     * 
+     * */
+
+    public function get_purchases($tasa, $page=null, $type=null){
+        global $db;
+
+        $purchases = [];
+
+        if($page==null){
+            $get_purchases = $db->query("SELECT * FROM purchases LEFT JOIN providers ON purchases.purchase_provider = providers.provider_id LEFT JOIN users ON purchases.purchase_user = users.user_id");
+        } else {
+            if($type == 'status')
+                $where = "WHERE purchase_status = ".$page;
+
+            $get_purchases = $db->query("SELECT * FROM purchases LEFT JOIN providers ON purchases.purchase_provider = providers.provider_id LEFT JOIN users ON purchases.purchase_user = users.user_id ".$where);
+        }
+        
+
+        if($get_purchases->num_rows > 0){
+            while($row = $get_purchases->fetch_assoc()){
+                $row['purchase_amount_bs'] = $row['purchase_amount'] * $tasa;
+                $purchases[] = $row;
+            }
+        }
+
+        return $purchases;
+    }
+
+    /**
+     * 
+     * new_purchase
+     * 
+     * */
+
+    public function new_purchase(){
+        global $db;
+
+        $db->query(sprintf("INSERT INTO purchases (purchase_user) VALUES (%s)", secure($_COOKIE[$this->_cookie_user_id], 'int'))) or _error("SQL_ERROR_THROWEN");
+
+        $new = $db->query("SELECT * FROM purchases ORDER BY purchase_id DESC LIMIT 1");
+        $purchase = $new->fetch_assoc();
+
+        return $purchase;
+    }
+
+    /**
+     * 
+     * get_purchase
+     * @param int
+     * @return array
+     * 
+     * */
+
+    public function get_purchase($id){
+        global $db;
+
+        $get_purchase = $db->query(sprintf("SELECT * FROM purchases WHERE purchase_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
+
+        $purchase = $get_purchase->fetch_assoc();
+
+        return $purchase;
+    }
+
+    /**
+     * 
+     * add_purchase
+     * @param array
+     * @param int
+     * @param boolean
+     * @return array
+     * 
+     * */
+
+    public function add_purchase($args = [], $purchase, $exist){
+        global $db;
+
+        if($exist){
+            $id = ($db->query("SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1"))->fetch_assoc();
+            $args['product_id_new'] = $id['product_id'];
+        }
+
+        $get_tasa = ($db->query("SELECT * FROM system_option WHERE option_name = 'tasa_dolar'"))->fetch_assoc();
+        $tasa = $get_tasa['option_value'];
+
+        $price_bs = $args['price'] * $tasa;
+
+        $subtotal = ($args['price'] * $args['quantity']);
+
+        $db->query(sprintf("INSERT INTO purchase_detail (detail_product, detail_price_unit, detail_price_unit_bs, detail_quantity, detail_sub_total, purchase_id) VALUES (%s, %s, %s, %s, %s, %s)", 
+            secure($args['product_id_new']),
+            secure($args['price']),
+            secure($price_bs),
+            secure($args['quantity']),
+            secure($subtotal),
+            secure($purchase))) or _error("SQL_ERROR_THROWEN");
+
+        $new = $db->query("SELECT * FROM purchase_detail LEFT JOIN products ON purchase_detail.detail_product = products.product_id ORDER BY purchase_detail_id DESC LIMIT 1");
+        $detail = $new->fetch_assoc();
+
+        return $detail;
+    }
+
+    /**
+     * 
+     * desc_purchase
+     * 
+     * */
+
+    public function desc_purchase($id){
+        global $db;
+
+        $db->query("DELETE FROM purchase_detail WHERE purchase_detail_id = $id");
+    }
+
+    /**
+     * 
+     * get_details_purchase
+     * @param int
+     * @return array
+     * 
+     * */
+
+    public function get_details_purchase($id){
+        global $db;
+
+        $details = [];
+
+        $get_details = $db->query(sprintf("SELECT * FROM purchase_detail PD LEFT JOIN products P ON PD.detail_product = P.product_id WHERE purchase_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
+
+        if($get_details->num_rows>0){
+            while($row = $get_details->fetch_assoc()){
+                $details[] = $row;
+            }
+        }
+
+        return $details;
+    }
+
+    /**
+     * 
+     * get_sum_details_purchase
+     * @param int
+     * @return float
+     * 
+     * */
+
+    public function get_sum_details_purchase($id){
+        global $db;
+
+
+        $get_details = $db->query(sprintf("SELECT SUM(detail_sub_total) AS balance FROM purchase_detail WHERE purchase_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
+
+        $sum = $get_details->fetch_assoc();
+
+        return $sum;
+    }
+
+    /**
+     * 
+     * check_purchase
+     * @param array
+     * @param int
+     * 
+     * */
+
+    public function check_purchase($args = [], $id){
+        global $db, $date;
+
+        if(is_empty($args['provider']) || is_empty($args['date']))
+            throw new Exception("Debe completar todos los datos obligatorios (*)");
+
+        if(!$this->get_provider($args['provider']))
+            throw new Exception("Proveedor inválido");
+
+        if($args['date'] > $date)
+            throw new Exception("Fecha inválida");
+
+        $get_balance = $db->query(sprintf("SELECT SUM(detail_sub_total) AS balance FROM purchase_detail WHERE purchase_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
+
+        $balance = $get_balance->fetch_assoc();
+
+        $details = $this->get_details_purchase($id);
+        foreach ($details as $value) {
+            $value['product_quantity'] = $this->get_product($value['product_id'])['product_quantity'];
+            $res = $value['product_quantity'] + $value['detail_quantity'];
+            $db->query(sprintf("UPDATE products SET product_quantity = %s WHERE product_id = %s",
+                        secure($res),
+                        secure($value['product_id']))) or _error("SQL_ERROR_THROWEN");
+        }
+
+        $db->query(sprintf("UPDATE purchases SET purchase_provider = %s, purchase_date = %s, purchase_invoice = %s, purchase_method = %s, purchase_amount = %s, purchase_status =%s WHERE purchase_id = %s", 
+            secure($args['provider']),
+            secure($args['date']),
+            secure($args['invoice']),
+            secure($args['method']),
+            secure($balance['balance']),
+            secure(true),
+            secure($id))) or _error("SQL_ERROR_THROWEN");
     }
 }
 

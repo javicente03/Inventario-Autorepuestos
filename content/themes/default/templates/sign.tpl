@@ -5,9 +5,8 @@
 <div class="container">
 	<div class="row container-center">
 		<div class="col s12 m6 z-depth-3">
-			<h2>Instalación</h2>
-			<span>Registra un usuario</span>
-			<form class="js_form" data-url="core/install.php">
+			<h2>Iniciar Sesión</h2>
+			<form class="js_form" data-url="core/signin.php">
 				<div class="row">
 					<div class="input-field col s12">
 						<i class="material-icons prefix">account_circle</i>
@@ -18,16 +17,6 @@
 						<i class="material-icons prefix">vpn_key</i>
 						<input type="password" name="password" id="password">
 						<label for="password">Ingrese su Contraseña</label>
-					</div>
-					<div class="input-field col s12">
-						<i class="material-icons prefix">account_circle</i>
-						<input type="text" name="firstname" id="firstname">
-						<label for="firstname">Ingrese su nombre</label>
-					</div>
-					<div class="input-field col s12">
-						<i class="material-icons prefix">account_circle</i>
-						<input type="text" name="lastname" id="lastname">
-						<label for="lastname">Ingrese su apellido</label>
 					</div>
 					<div class="input-field col s12 center">
 						<button type="submit" class="btn-op">Ingresar</button>

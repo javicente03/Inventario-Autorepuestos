@@ -70,7 +70,28 @@ RewriteRule .* - [L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
+# Install
+RewriteRule ^install/?$ install.php [L,QSA]
+
 # Sign(in|up|out)
 RewriteRule ^signin/?$ sign.php?do=in [L,QSA]
-RewriteRule ^signup/?$ sign.php?do=up [L,QSA]
 RewriteRule ^signout/?$ sign.php?do=out [L,QSA]
+
+# Dashboard
+RewriteRule ^dashboard/?$ index.php [L,QSA]
+
+# Products
+RewriteRule ^products/([^/]+)/?$ products.php?view=$1 [L,QSA]
+
+# Proveedores
+RewriteRule ^providers/([^/]+)/?$ providers.php?view=$1 [L,QSA]
+RewriteRule ^providers/([^/]+)/([^/]+)/?$ providers.php?view=$1&page=$2 [L,QSA]
+
+# Categorias
+RewriteRule ^categories/([^/]+)/?$ categories.php?view=$1 [L,QSA]
+RewriteRule ^categories/([^/]+)/([^/]+)/?$ categories.php?view=$1&page=$2 [L,QSA]
+
+# Compras
+RewriteRule ^purchases/([^/]+)/?$ purchases.php?view=$1 [L,QSA]
+RewriteRule ^purchases/([^/]+)/([^/]+)/?$ purchases.php?view=$1&page=$2 [L,QSA]
+RewriteRule ^purchases/([^/]+)/([^/]+)/([^/]+)/?$ purchases.php?view=$1&page=$2&type=$3 [L,QSA]

@@ -8,17 +8,17 @@
 // fetch bootloader
 require('bootloader.php');
 
+if (!$user->_logged_in) {
+    redirect('/signin');
+}
+
 try {
 
+        page_header(SYS_NAME." | Dashboard");
 
-    if(!isset($_GET['do'])){
-        page_header("Inventario");
 
         // page footer
         page_footer("index");
-    } else{
-
-    }
 
 } catch (Exception $e) {
 	_error(__("Error"), $e->getMessage());
