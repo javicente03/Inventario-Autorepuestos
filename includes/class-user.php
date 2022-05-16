@@ -489,11 +489,15 @@ class User
      * 
      * */
 
-    public function get_products($tasa){
+    public function get_products($tasa, $where=""){
         global $db;
 
         $products = [];
-        $get_products = $db->query("SELECT * FROM products P LEFT JOIN categories C ON P.product_category = C.category_id");
+
+        if($where != "")
+            $get_products = $db->query("SELECT * FROM products P LEFT JOIN categories C ON P.product_category = C.category_id".$where);
+        else
+            $get_products = $db->query("SELECT * FROM products P LEFT JOIN categories C ON P.product_category = C.category_id");
 
         if($get_products->num_rows > 0){
             while($row = $get_products->fetch_assoc()){
@@ -517,8 +521,7 @@ class User
     public function get_product($id){
         global $db;
 
-        $get_tasa = ($db->query("SELECT * FROM system_option WHERE option_name = 'tasa_dolar'"))->fetch_assoc();
-        $tasa = $get_tasa['option_value'];
+        $tasa = get_tasa();
         $get_product = $db->query("SELECT * FROM products P LEFT JOIN categories C ON P.product_category = C.category_id WHERE product_id = $id");
 
         if($get_product->num_rows > 0){
@@ -584,6 +587,55 @@ class User
                                                     secure($args['category']),
                                                     secure($args['photo']),
                                                     secure($args['description']),)) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+    /**
+     * 
+     * edit_product
+     * @param array
+     * 
+     * */
+
+    public function edit_product($args = [], $id){
+        global $db;
+
+        if(is_empty($args['name']) || is_empty($args['marca']) || is_empty($args['price']) || is_empty($args['price_sale']) || is_empty($args['category']))
+            throw new Exception("Debe completar todos los datos obligatorios");
+
+        if(strlen($args['description']) > 500)
+            throw new Exception("La descripción no debe exceder los 500 caracteres");
+
+        if(!is_numeric($args['price']))
+            throw new Exception("El precio debe ser numérico");
+
+        if(!is_numeric($args['price_sale']))
+            throw new Exception("El precio debe ser numérico");
+
+        if(!valid_category($args['category']))
+            throw new Exception("La categoría seleccionada es inválida");
+
+        if($args['price'] <= 0 || $args['price_sale'] <= 0)
+            throw new Exception("El precio debe ser mayor a 0");
+
+        if($args['price_sale'] < $args['price'])
+            throw new Exception("El precio debe de venta no puede ser menor al precio de proveedor");
+
+        $db->query(sprintf("UPDATE products SET product_name = %s,
+                                                    product_marca = %s,
+                                                    product_price = %s,
+                                                    product_price_sale = %s,
+                                                    product_category = %s,
+                                                    product_image = %s,
+                                                    product_description = %s WHERE product_id = %s",
+                                                    secure($args['name']),
+                                                    secure($args['marca']),
+                                                    secure($args['price']),
+                                                    secure($args['price_sale']),
+                                                    secure($args['category']),
+                                                    secure($args['photo']),
+                                                    secure($args['description']),
+                                                    secure($id))) or _error("SQL_ERROR_THROWEN");
         return true;
     }
 
@@ -730,6 +782,111 @@ class User
     }
 
 
+    /***************************************
+     * 
+     * CLIENTS
+     * 
+     * *************************************/
+
+    /**
+     * 
+     * get_clients
+     * 
+     * */
+
+    public function get_clients(){
+        global $db;
+
+        $clients = [];
+        $get_clients = $db->query("SELECT * FROM clients");
+
+        if($get_clients->num_rows > 0){
+            while($row = $get_clients->fetch_assoc()){
+                $clients[] = $row; 
+            }
+        }
+
+        return $clients;
+    }
+
+    /**
+     * 
+     * get_client
+     * @param int
+     * 
+     * */
+
+    public function get_client($id){
+        global $db;
+
+        $get_client = $db->query("SELECT * FROM clients WHERE client_id = $id") or _error('SQL_ERROR_THROWEN');
+
+        $client = $get_client->fetch_assoc();
+
+        return $client;
+    }
+
+    /**
+     * 
+     * register_client
+     * @param array
+     * @return array
+     * 
+     * */
+
+    public function register_client($args = []){
+        global $db;
+
+        if(is_empty($args['name']) || is_empty($args['contact']))
+            throw new Exception("Debe completar todos los datos del cliente");
+
+        $db->query(sprintf("INSERT INTO clients (client_name,
+                                                    client_contact) VALUES 
+                                                    (%s, %s)",
+                                                    secure($args['name']),
+                                                    secure($args['contact']),)) or _error("SQL_ERROR_THROWEN");
+
+        $new = $db->query("SELECT * FROM clients ORDER BY client_id DESC LIMIT 1");
+        return $new->fetch_assoc();
+    }
+
+    /**
+     * 
+     * edit_client
+     * @param array
+     * 
+     * */
+
+    public function edit_client($args = [], $id){
+        global $db;
+
+        if(is_empty($args['name']) || is_empty($args['contact']))
+            throw new Exception("Debe completar todos los datos");
+
+        $db->query(sprintf("UPDATE clients SET client_name = %s,
+                                                    client_contact = %s WHERE client_id = %s",
+                                                    secure($args['name']),
+                                                    secure($args['contact']),
+                                                    secure($id))) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+    /**
+     * 
+     * delete_client
+     * @param array
+     * 
+     * */
+
+    public function delete_client($id){
+        global $db;
+
+        $db->query(sprintf("DELETE FROM clients WHERE client_id = %s",
+                                                    secure($id),)) or _error("SQL_ERROR_THROWEN");
+        return true;
+    }
+
+
 
     /***************************************
      * 
@@ -839,7 +996,7 @@ class User
      * 
      * */
 
-    public function get_purchases($tasa, $page=null, $type=null){
+    public function get_purchases($page=null, $type=null){
         global $db;
 
         $purchases = [];
@@ -856,7 +1013,6 @@ class User
 
         if($get_purchases->num_rows > 0){
             while($row = $get_purchases->fetch_assoc()){
-                $row['purchase_amount_bs'] = $row['purchase_amount'] * $tasa;
                 $purchases[] = $row;
             }
         }
@@ -892,7 +1048,7 @@ class User
     public function get_purchase($id){
         global $db;
 
-        $get_purchase = $db->query(sprintf("SELECT * FROM purchases WHERE purchase_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
+        $get_purchase = $db->query(sprintf("SELECT * FROM purchases LEFT JOIN providers ON purchases.purchase_provider = providers.provider_id WHERE purchase_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
 
         $purchase = $get_purchase->fetch_assoc();
 
@@ -917,8 +1073,7 @@ class User
             $args['product_id_new'] = $id['product_id'];
         }
 
-        $get_tasa = ($db->query("SELECT * FROM system_option WHERE option_name = 'tasa_dolar'"))->fetch_assoc();
-        $tasa = $get_tasa['option_value'];
+        $tasa = get_tasa();
 
         $price_bs = $args['price'] * $tasa;
 
@@ -1017,6 +1172,8 @@ class User
 
         $balance = $get_balance->fetch_assoc();
 
+        $balance_bs = $balance['balance'] * get_tasa();
+
         $details = $this->get_details_purchase($id);
         foreach ($details as $value) {
             $value['product_quantity'] = $this->get_product($value['product_id'])['product_quantity'];
@@ -1026,14 +1183,275 @@ class User
                         secure($value['product_id']))) or _error("SQL_ERROR_THROWEN");
         }
 
-        $db->query(sprintf("UPDATE purchases SET purchase_provider = %s, purchase_date = %s, purchase_invoice = %s, purchase_method = %s, purchase_amount = %s, purchase_status =%s WHERE purchase_id = %s", 
+        $db->query(sprintf("UPDATE purchases SET purchase_provider = %s, purchase_date = %s, purchase_invoice = %s, purchase_method = %s, purchase_amount = %s, purchase_amount_bs = %s, purchase_status =%s WHERE purchase_id = %s", 
             secure($args['provider']),
             secure($args['date']),
             secure($args['invoice']),
             secure($args['method']),
             secure($balance['balance']),
+            secure($balance_bs),
             secure(true),
             secure($id))) or _error("SQL_ERROR_THROWEN");
+    }
+
+    /**
+     * 
+     * delete_purchase
+     * 
+     * */
+
+    public function delete_purchase($id){
+        global $db;
+
+        $purchase = $this->get_purchase($id);
+
+        if(!$purchase)
+            throw new Exception('Venta inválida');
+
+        if($purchase['purchase_status'])
+            throw new Exception('Esta compra ya fue concretada, no puede eliminarse');
+
+        $db->query("DELETE FROM purchases WHERE purchase_id = $id") or _error('SQL_ERROR_THROWEN');
+    }
+
+    /***************************************
+     * 
+     * SALES
+     * 
+     * *************************************/
+
+    /**
+     * 
+     * get_sales
+     * 
+     * */
+
+    public function get_sales($page=null, $type=null){
+        global $db;
+
+        $sales = [];
+
+        if($page==null){
+            $get_sales = $db->query("SELECT * FROM sales LEFT JOIN clients ON sales.sale_client = clients.client_id LEFT JOIN users ON sales.sale_user = users.user_id");
+        } else {
+            if($type == 'status')
+                $where = "WHERE sale_status = ".$page;
+
+            $get_sales = $db->query("SELECT * FROM sales LEFT JOIN clients ON sales.sale_client = clients.client_id LEFT JOIN users ON sales.sale_user = users.user_id ".$where);
+        }
+        
+
+        if($get_sales->num_rows > 0){
+            while($row = $get_sales->fetch_assoc()){
+                $sales[] = $row;
+            }
+        }
+
+        return $sales;
+    }
+
+    /**
+     * 
+     * new_sale
+     * 
+     * */
+
+    public function new_sale(){
+        global $db;
+
+        $db->query(sprintf("INSERT INTO sales (sale_user) VALUES (%s)", secure($_COOKIE[$this->_cookie_user_id], 'int'))) or _error("SQL_ERROR_THROWEN");
+
+        $new = $db->query("SELECT * FROM sales ORDER BY sale_id DESC LIMIT 1");
+        $sale = $new->fetch_assoc();
+
+        return $sale;
+    }
+
+    /**
+     * 
+     * get_sale
+     * @param int
+     * @return array
+     * 
+     * */
+
+    public function get_sale($id){
+        global $db;
+
+        $get_sale = $db->query(sprintf("SELECT * FROM sales LEFT JOIN clients ON sales.sale_client = clients.client_id WHERE sale_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
+
+        $sale = $get_sale->fetch_assoc();
+
+        return $sale;
+    }
+
+    /**
+     * 
+     * add_sale
+     * @param array
+     * @param int
+     * @param boolean
+     * @return array
+     * 
+     * */
+
+    public function add_sale($args = [], $sale, $exist){
+        global $db;
+
+        if(!is_numeric($args['quantity']) || $args['quantity'] <= 0)
+            throw new Exception('La cantidad ingresada es inválida');
+
+        $product = $this->get_product($args['product_id']);
+
+        if(!$product)
+            throw new Exception('Este producto no existe en su stock');
+
+        $check_stock = check_stock($args['quantity'], $args['product_id']);
+        if(!$check_stock[0])
+            throw new Exception('El stock de este producto es inferior a la cantidad solicitada, sólo quedan '.$check_stock[1].' unidades');
+
+        $tasa = get_tasa();
+
+        $subtotal = ($product['product_price_sale'] * $args['quantity']);
+
+        $price_bs = ($product['product_price_sale'] * $tasa);
+
+        $db->query(sprintf("INSERT INTO sale_detail (detail_product, detail_price_unit, detail_price_unit_bs, detail_quantity, detail_sub_total, sale_id) VALUES (%s, %s, %s, %s, %s, %s)", 
+            secure($args['product_id']),
+            secure($product['product_price_sale']),
+            secure($price_bs),
+            secure($args['quantity']),
+            secure($subtotal),
+            secure($sale))) or _error("SQL_ERROR_THROWEN");
+
+        $new = $db->query("SELECT * FROM sale_detail LEFT JOIN products ON sale_detail.detail_product = products.product_id ORDER BY sale_detail_id DESC LIMIT 1");
+        $detail = $new->fetch_assoc();
+
+        return $detail;
+    }
+
+    /**
+     * 
+     * desc_sale
+     * 
+     * */
+
+    public function desc_sale($id){
+        global $db;
+
+        $db->query("DELETE FROM sale_detail WHERE sale_detail_id = $id");
+    }
+
+    /**
+     * 
+     * get_details_sale
+     * @param int
+     * @return array
+     * 
+     * */
+
+    public function get_details_sale($id){
+        global $db;
+
+        $details = [];
+
+        $get_details = $db->query(sprintf("SELECT * FROM sale_detail PD LEFT JOIN products P ON PD.detail_product = P.product_id WHERE sale_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
+
+        if($get_details->num_rows>0){
+            while($row = $get_details->fetch_assoc()){
+                $details[] = $row;
+            }
+        }
+
+        return $details;
+    }
+
+    /**
+     * 
+     * get_sum_details_sale
+     * @param int
+     * @return float
+     * 
+     * */
+
+    public function get_sum_details_sale($id){
+        global $db;
+
+
+        $get_details = $db->query(sprintf("SELECT SUM(detail_sub_total) AS balance FROM sale_detail WHERE sale_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
+
+        $sum = $get_details->fetch_assoc();
+
+        return $sum;
+    }
+
+    /**
+     * 
+     * check_sale
+     * @param array
+     * @param int
+     * 
+     * */
+
+    public function check_sale($args = [], $id){
+        global $db, $date;
+
+        if(is_empty($args['hd_client_id']))
+            throw new Exception("Debe completar todos los datos obligatorios (*)");
+
+        if($args['hd_client_type'] == 'new'){
+            $arr = array('name' => $args['hd_client_name'], 'contact' => $args['hd_client_contact']);
+            $new_client = $this->register_client($arr);
+            $args['hd_client_id'] = $new_client['client_id'];
+        } else{
+            if(!$this->get_client($args['hd_client_id']))
+                throw new Exception("Cliente no encontrado");
+        }
+
+        $get_balance = $db->query(sprintf("SELECT SUM(detail_sub_total) AS balance FROM sale_detail WHERE sale_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
+
+        $balance = $get_balance->fetch_assoc();
+
+        $balance_bs = $balance['balance'] * get_tasa();
+
+        $details = $this->get_details_sale($id);
+        foreach ($details as $value) {
+            $value['product_quantity'] = $this->get_product($value['product_id'])['product_quantity'];
+            $res = $value['product_quantity'] - $value['detail_quantity'];
+            if($res <0)
+                $res = 0;
+            $db->query(sprintf("UPDATE products SET product_quantity = %s WHERE product_id = %s",
+                        secure($res),
+                        secure($value['product_id']))) or _error("SQL_ERROR_THROWEN");
+        }
+
+        $db->query(sprintf("UPDATE sales SET sale_client = %s, sale_date = %s, sale_amount = %s, sale_amount_bs = %s, sale_status =%s WHERE sale_id = %s", 
+            secure($args['hd_client_id']),
+            secure($date),
+            secure($balance['balance']),
+            secure($balance_bs),
+            secure(true),
+            secure($id))) or _error("SQL_ERROR_THROWEN");
+    }
+
+    /**
+     * 
+     * delete_sale
+     * 
+     * */
+
+    public function delete_sale($id){
+        global $db;
+
+        $sale = $this->get_sale($id);
+
+        if(!$sale)
+            throw new Exception('Venta inválida');
+
+        if($sale['sale_status'])
+            throw new Exception('Esta venta ya fue concretada, no puede eliminarse');
+
+        $db->query("DELETE FROM sales WHERE sale_id = $id") or _error('SQL_ERROR_THROWEN');
     }
 }
 

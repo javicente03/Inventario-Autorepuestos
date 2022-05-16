@@ -1,4 +1,4 @@
-<h2>Lista de Compras
+<h2 >Lista de Compras
 
 {if isset($get['type'])}
 	{if $get['type'] == 'status' && $get['page'] == 0}
@@ -15,7 +15,10 @@
 
 <a href="{$base_url}/purchases/list/1/status/" class="btn indigo darken-4">Completadas</a>
 
-<table class="table centered" id="datatable">
+<a href="{$base_url}/purchases/list/" class="btn indigo darken-4">Todas</a>
+
+
+<table class="table centered striped" id="datatable">
 	<thead>
 		<th>Fecha</th>
 		<th>Proveedor</th>
@@ -49,6 +52,7 @@
 						<a class="btn btn-flat" href="{$base_url}/purchases/detail/{$row['purchase_id']}"><i class="material-icons">visibility</i></a>
 						{else}
 						<a class="btn btn-flat" href="{$base_url}/purchases/edit/{$row['purchase_id']}"><i class="material-icons">edit</i></a>
+						<button class="btn btn-flat js_button" data-url="core/purchases.php?do=delete" data-id="{$row['purchase_id']}"><i class="material-icons">delete</i></button>
 						{/if}
 					</td>
 				</tr>

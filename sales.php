@@ -22,7 +22,7 @@ try {
 
                 switch($_GET['type']){
                     case 'status':
-                        $purchases = $user->get_purchases($_GET['page'], $_GET['type']);
+                        $sales = $user->get_sales($_GET['page'], $_GET['type']);
                         break;
 
                     default:
@@ -30,19 +30,19 @@ try {
                         break;
                 }
             } else
-                $purchases = $user->get_purchases();
+                $sales = $user->get_sales();
 
-            page_header(SYS_NAME." | Purchases");
+            page_header(SYS_NAME." | Sales");
 
             $smarty->assign('get', $_GET);
-            $smarty->assign('purchases', $purchases);
+            $smarty->assign('sales', $sales);
             $smarty->assign('view', $_GET['view']);
             break;
 
         case 'new':
             page_header(SYS_NAME." | New Purchase");
-            $purchase = $user->new_purchase();
-            redirect('/purchases/edit/'.$purchase['purchase_id']);
+            $sale = $user->new_sale();
+            redirect('/sales/edit/'.$sale['sale_id']);
             break;
 
         case 'edit':
@@ -50,33 +50,33 @@ try {
                 _error("404");
 
             page_header(SYS_NAME." | Purchase ".$_GET['page']);
-            $purchase = $user->get_purchase($_GET['page']);
-            if($purchase['purchase_status'])
-                redirect("/purchases/detail/".$purchase['purchase_id']);
+            $sale = $user->get_sale($_GET['page']);
+            if($sale['sale_status'])
+                redirect("/sales/detail/".$sale['sale_id']);
 
-            $details = $user->get_details_purchase($_GET['page']);
-            $sum_details = $user->get_sum_details_purchase($_GET['page']);
-            $providers = $user->get_providers();
+            $details = $user->get_details_sale($_GET['page']);
+            $sum_details = $user->get_sum_details_sale($_GET['page']);
+            $clients = $user->get_clients();
             $categories = $user->get_categories();
-            $products = $user->get_products($config['tasa_dolar']);
+            $products = $user->get_products($config['tasa_dolar'], ' WHERE product_quantity > 0');
 
-            $smarty->assign('purchase', $purchase);
+            $smarty->assign('sale', $sale);
             $smarty->assign('details', $details);
             $smarty->assign('sum_details', $sum_details);
             $smarty->assign('products', $products);
             $smarty->assign('categories', $categories);
-            $smarty->assign('providers', $providers);
+            $smarty->assign('clients', $clients);
             $smarty->assign('view', $_GET['view']);
             break;
 
         case 'detail':
-            $purchase = $user->get_purchase($_GET['page']);
-            $details = $user->get_details_purchase($_GET['page']);
-            if(!$purchase['purchase_status'])
-                redirect("/purchases/edit/".$purchase['purchase_id']);
+            $sale = $user->get_sale($_GET['page']);
+            $details = $user->get_details_sale($_GET['page']);
+            if(!$sale['sale_status'])
+                redirect("/sales/edit/".$sale['sale_id']);
 
-            page_header(SYS_NAME." | ".$purchase['purchase_id']);
-            $smarty->assign('purchase', $purchase);
+            page_header(SYS_NAME." | ".$sale['sale_id']);
+            $smarty->assign('sale', $sale);
             $smarty->assign('details', $details);
             $smarty->assign('view', $_GET['view']);
             break;
@@ -89,8 +89,8 @@ try {
     
 
     // page footer
-    page_footer("purchases");
+    page_footer("sales");
 
 } catch (Exception $e) {
-	_error(__("Error"), $e->getMessage());
+	_error('404');
 }

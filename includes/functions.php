@@ -569,4 +569,44 @@ function valid_category($id){
     else
         return false;
 }
+
+/**
+ * 
+ * get_tasa
+ * 
+ * */
+
+function get_tasa(){
+    global $db;
+
+    $get_tasa = ($db->query("SELECT * FROM system_option WHERE option_name = 'tasa_dolar'"))->fetch_assoc();
+    $tasa = $get_tasa['option_value']; 
+    return $tasa;   
+}
+
+/**
+ * 
+ * check_stock
+ * @param int
+ * @param int
+ * @return boolean
+ * 
+ * */
+
+function check_stock($cantidad, $product_id){
+    global $db;
+
+    $get_product = $db->query("SELECT product_quantity FROM products WHERE product_id = $product_id");
+    $stock = $get_product->fetch_assoc();
+
+    if($cantidad > $stock['product_quantity']){
+        $response = [false, $stock['product_quantity']];
+        return $response;
+    }
+    else{
+        $response = [true, false];
+        return $response;
+    }
+}
+
 ?>

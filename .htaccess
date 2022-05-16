@@ -82,10 +82,15 @@ RewriteRule ^dashboard/?$ index.php [L,QSA]
 
 # Products
 RewriteRule ^products/([^/]+)/?$ products.php?view=$1 [L,QSA]
+RewriteRule ^products/([^/]+)/([^/]+)/?$ products.php?view=$1&page=$2 [L,QSA]
+RewriteRule ^products/([^/]+)/([^/]+)/([^/]+)/?$ products.php?view=$1&page=$2&type=$3 [L,QSA]
 
 # Proveedores
 RewriteRule ^providers/([^/]+)/?$ providers.php?view=$1 [L,QSA]
 RewriteRule ^providers/([^/]+)/([^/]+)/?$ providers.php?view=$1&page=$2 [L,QSA]
+
+# Proveedores
+RewriteRule ^clients/([^/]+)/?$ clients.php?view=$1 [L,QSA]
 
 # Categorias
 RewriteRule ^categories/([^/]+)/?$ categories.php?view=$1 [L,QSA]
@@ -95,3 +100,11 @@ RewriteRule ^categories/([^/]+)/([^/]+)/?$ categories.php?view=$1&page=$2 [L,QSA
 RewriteRule ^purchases/([^/]+)/?$ purchases.php?view=$1 [L,QSA]
 RewriteRule ^purchases/([^/]+)/([^/]+)/?$ purchases.php?view=$1&page=$2 [L,QSA]
 RewriteRule ^purchases/([^/]+)/([^/]+)/([^/]+)/?$ purchases.php?view=$1&page=$2&type=$3 [L,QSA]
+
+# Ventas
+RewriteRule ^sales/([^/]+)/?$ sales.php?view=$1 [L,QSA]
+RewriteRule ^sales/([^/]+)/([^/]+)/?$ sales.php?view=$1&page=$2 [L,QSA]
+RewriteRule ^sales/([^/]+)/([^/]+)/([^/]+)/?$ sales.php?view=$1&page=$2&type=$3 [L,QSA]
+
+#Tasa de dolar
+RewriteRule ^tasa-dolar/?$ dolar.php?view=$1 [L,QSA]

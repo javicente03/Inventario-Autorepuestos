@@ -1,7 +1,7 @@
-<h2>Lista de Proveedores</h2>
+<h2 {if $providers}class="title-table"{/if}>Lista de Proveedores</h2>
 <a href="{$base_url}/providers/new" class="btn indigo darken-4"><i class="material-icons left">local_shipping</i>Registrar</a>
 
-<table class="table centered" id="table">
+<table class="table centered striped" id="datatable">
 	<thead>
 		<th>Nombre</th>
 		<th>Ubicación</th>

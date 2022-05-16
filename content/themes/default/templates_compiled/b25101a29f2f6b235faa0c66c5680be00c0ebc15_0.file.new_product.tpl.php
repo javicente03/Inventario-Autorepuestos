@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-14 21:33:16
+/* Smarty version 3.1.40, created on 2022-05-16 03:47:57
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\new_product.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_6280201c770880_37277381',
+  'unifunc' => 'content_6281c96da3f6a4_65795067',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'b25101a29f2f6b235faa0c66c5680be00c0ebc15' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\new_product.tpl',
-      1 => 1652563994,
+      1 => 1652672842,
       2 => 'file',
     ),
   ),
@@ -21,9 +21,9 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:_form_image.tpl' => 1,
   ),
 ),false)) {
-function content_6280201c770880_37277381 (Smarty_Internal_Template $_smarty_tpl) {
-?><h2>Registrar Producto</h2>
-			<form class="js_form" data-url="core/products.php?do=new">
+function content_6281c96da3f6a4_65795067 (Smarty_Internal_Template $_smarty_tpl) {
+?><h2>Modificar Producto</h2>
+			<form class="js_form" data-url="core/products.php?do=edit">
 				<div class="row">
 					<div class="input-field col s12 m6">
 						<input type="text" name="name" id="name">

@@ -42,7 +42,7 @@ Nueva Factura</h2>
 			</form>
 
 <h6>Detalles de la factura</h6>
-<table class="table centered" id="detail">
+<table class="table centered striped" id="detail">
 	<thead>	
 		<th>Producto</th>
 		<th>Precio</th>
@@ -64,13 +64,17 @@ Nueva Factura</h2>
 	{/if}
 	</tbody>
 </table>
-<h6>Total: $<span id="total_balance">{$sum_details['balance']}</span></h6>
+<div class="div-total-balance">
+	<h6 class="total-balance">Total: $<span id="total_balance">{$sum_details['balance']}</span></h6>
+</div>
 
   <!-- Modal Structure -->
 <div id="modal1" class="modal">
     <div class="modal-content">
-      <h4>Agregar Producto</h4>
-      <button data-target="modal2" class="btn bt-flat modal-trigger"><i class="material-icons left">search</i></button>
+      <div style="display:flex;justify-content:space-between;">
+      	<h4>Agregar Producto</h4>
+	      <button data-target="modal2" class="btn bt-flat modal-trigger"><i class="material-icons left">search</i></button>
+      </div>
       <form class="js_form" id="form_product" data-url="core/products.php?do=new&purchase={$purchase['purchase_id']}">
       	<div class="row">
 	      	<div class="input-field col s12 m6">
@@ -81,13 +85,16 @@ Nueva Factura</h2>
 						<input type="text" name="marca" id="marca" placeholder="Marca (*)">
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="text" name="price" id="price" placeholder="Precio Proveedor(*)">
+						<input type="number" step="0.1" name="price" id="price">
+						<span>Precio Proveedor (*)</span>
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="text" name="price_sale" id="price_sale" placeholder="Precio Venta (*)">
+						<input type="number" step="0.1" name="price_sale" id="price_sale">
+						<span>Precio Venta (*)</span>
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="number" name="quantity" id="quantity" placeholder="Cantidad a Ingresar (*)">
+						<input type="number" name="quantity" id="quantity">
+						<span>Cantidad a Ingresar (*)</span>
 					</div>
 					<div class="input-field col s12 m6" id="cont-category">
 						{if $categories}
@@ -96,8 +103,10 @@ Nueva Factura</h2>
 									<option value="{$row['category_id']}">{$row['category_name']}</option>
 								{/foreach}
 							</select>
+							<label for="quantity">Categoría (*)</label>
+						{else}
+							<span>Debe cargar categorías</span>
 						{/if}
-						<label for="quantity">Categoría (*)</label>
 					</div>
 					<div class="input-field col s12 m6" id="cont-photo">
 						<div class="container-uploader" data-id="photo-product">
@@ -121,7 +130,7 @@ Nueva Factura</h2>
     <div class="modal-content">
       <h6>Buscar Producto</h6>
       
-    <table class="table centered" id="datatable">
+    <table class="table centered striped" id="datatable">
 	<thead>
 		<th>Nombre</th>
 		<th>Marca</th>

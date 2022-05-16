@@ -23,9 +23,10 @@
 
     <style>
         body {
-            /*background-image: url({$base_url}/includes/assets/img/logo-n.png);*/
-            /*background-size: 400px;*/
-            /*background-repeat: no-repeat;*/
+            background-image: url({$base_url}/includes/assets/img/logo-n.png);
+            background-size: 300px;
+            background-repeat: no-repeat;
+            background-position-x: -50px;
         }
     </style>
 </head>

@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-14 23:14:36
+/* Smarty version 3.1.40, created on 2022-05-16 00:51:46
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\list_categories.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_628037dc3d64a5_32562551',
+  'unifunc' => 'content_6281a022155c27_66388410',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'a829160e3c315a9e4a5af647bd867a31ca7edbb8' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\list_categories.tpl',
-      1 => 1652570073,
+      1 => 1652662094,
       2 => 'file',
     ),
   ),
@@ -20,12 +20,12 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_628037dc3d64a5_32562551 (Smarty_Internal_Template $_smarty_tpl) {
+function content_6281a022155c27_66388410 (Smarty_Internal_Template $_smarty_tpl) {
 ?><h2>Lista de Categorías</h2>
 <a href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
 /categories/new" class="btn indigo darken-4"><i class="material-icons left">local_shipping</i>Registrar</a>
 
-<table class="table centered" id="table">
+<table class="table centered striped" id="table">
 	<thead>
 		<th>Nombre</th>
 		<th>Editar</th>

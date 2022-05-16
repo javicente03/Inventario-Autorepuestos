@@ -73,11 +73,31 @@ $('body').on('click', '.js_button_check', function(){
     $('#cont-photo').css('display', 'none');
     $('#cont-description').css('display', 'none');
     $('#cont-marca').css('display', 'none');
+})
 
-    // let formProduct = document.getElementById("form_product");
-    // let div = formProduct.querySelector(".row");
-    // div.removeChild(div.querySelector('#cont-category'));
-    // div.removeChild(div.querySelector('#cont-photo'));
-    // div.removeChild(div.querySelector('#cont-description'));
-    // div.removeChild(div.querySelector('#cont-marca'));
+$('body').on('click', '.js_button_check_sale', function(){
+    $("#product_id").val($(this).data('id'));
+    $("#name").val($(this).data('name'));
+    $("#price_unit").val($(this).data('price'));
+    $("#price_unit_bs").val($(this).data('price_bs'));
+    $("#price_sale").val($(this).data('price_sale'));
+    $("#price_sale_bs").val($(this).data('price_sale_bs'));
+})
+
+
+$('body').on('click', '.js_button_client', function(){
+    $("#hd_client_name").val($(this).data('name'));
+    $("#hd_client_contact").val($(this).data('contact'));
+    $("#hd_client_id").val($(this).data('id'));
+    $("#hd_client_type").val('exist');
+    $("#client_span").html($(this).data('name'));
+})
+
+
+$('body').on('click', '.js_button_new_client', function(){
+    $("#hd_client_name").val($("#client_name").val())
+    $("#hd_client_contact").val($("#client_contact").val())
+    $("#hd_client_id").val(0)
+    $("#hd_client_type").val('new')
+    $("#client_span").html($("#client_name").val());
 })

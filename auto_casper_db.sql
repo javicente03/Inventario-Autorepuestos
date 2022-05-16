@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-05-2022 a las 17:15:36
+-- Tiempo de generación: 16-05-2022 a las 08:05:06
 -- Versión del servidor: 10.4.22-MariaDB
 -- Versión de PHP: 7.3.28
 
@@ -121,7 +121,7 @@ CREATE TABLE `purchase_detail` (
 
 CREATE TABLE `sales` (
   `sale_id` int(11) NOT NULL,
-  `sale_date` date NOT NULL,
+  `sale_date` date DEFAULT NULL,
   `sale_client` int(11) NOT NULL,
   `sale_amount` decimal(13,2) NOT NULL,
   `sale_user` int(11) NOT NULL,
@@ -163,7 +163,7 @@ CREATE TABLE `system_option` (
 
 INSERT INTO `system_option` (`option_id`, `option_name`, `option_value`) VALUES
 (1, 'install', '0'),
-(2, 'tasa_dolar', '4');
+(2, 'tasa_dolar', '4.5');
 
 -- --------------------------------------------------------
 

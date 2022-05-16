@@ -25,6 +25,7 @@ try {
 	switch ($_GET['do']) {
 		case 'new':
 			$_POST['photo'] = json_decode($_POST['photo']);
+			$_POST['photo'] = ($_POST['photo']!="")?$_POST['photo']:'default/image.png';
 			$user->register_product($_POST);
 
 			if(isset($_GET['purchase'])){
@@ -52,15 +53,18 @@ try {
 			break;
 
 		case 'edit':
-
 			if(!isset($_GET['id']))
 				return_json(array('error' => true, 'message' => 'Data inválida'));
 
 			$_POST['photo'] = json_decode($_POST['photo']);
-			$user->edit_product($_POST);
 
-			return_json(array('callback' => "M.toast({html: 'Producto  exitósamente', classes: 'rounded green'});
-                    form.reset()"));
+			if($_POST['photo'] ==""){
+				$_POST['photo'] = ($db->query("SELECT product_image FROM products WHERE product_id = ".$_GET['id']))->fetch_assoc()['product_image'];
+			}
+
+			$user->edit_product($_POST, $_GET['id']);
+
+			return_json(array('callback' => "location.href = ''"));
 
 			break;
 		

@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-14 23:05:17
+/* Smarty version 3.1.40, created on 2022-05-16 06:12:56
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\list_providers.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_628035ad9aefc2_78105193',
+  'unifunc' => 'content_6281eb68256779_76174394',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'cb8ed87dae37cbb256c0783907cbd608bb013eb1' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\list_providers.tpl',
-      1 => 1652569504,
+      1 => 1652681574,
       2 => 'file',
     ),
   ),
@@ -20,12 +20,12 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_628035ad9aefc2_78105193 (Smarty_Internal_Template $_smarty_tpl) {
-?><h2>Lista de Proveedores</h2>
+function content_6281eb68256779_76174394 (Smarty_Internal_Template $_smarty_tpl) {
+?><h2 <?php if ($_smarty_tpl->tpl_vars['providers']->value) {?>class="title-table"<?php }?>>Lista de Proveedores</h2>
 <a href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
 /providers/new" class="btn indigo darken-4"><i class="material-icons left">local_shipping</i>Registrar</a>
 
-<table class="table centered" id="table">
+<table class="table centered striped" id="datatable">
 	<thead>
 		<th>Nombre</th>
 		<th>Ubicación</th>

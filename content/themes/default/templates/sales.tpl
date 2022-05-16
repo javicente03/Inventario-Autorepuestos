@@ -6,11 +6,11 @@
 	<div class="row container-center">
 		<div class="col s12">
 			{if $view=="list"}
-				{include file="list_products.tpl"}
+				{include file="list_sales.tpl"}
 			{else if $view == "edit"}
-				{include file="edit_product.tpl"}
+				{include file="new_sale.tpl"}
 			{else if $view == "detail"}
-				{include file="detail_product.tpl"}
+				{include file="view_sale.tpl"}
 			{/if}
 		</div>
 	</div>

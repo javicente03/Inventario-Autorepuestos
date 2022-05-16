@@ -1,6 +1,6 @@
 <h2>
-<a href="{$base_url}/purchases/list" class="btn btn-flat tooltipped" data-position="bottom" data-tooltip="Regresar"><i class="material-icons">arrow_back</i></a>
-Compra #{$purchase['purchase_id']}</h2>
+<a href="{$base_url}/sales/list" class="btn btn-flat tooltipped" data-position="bottom" data-tooltip="Regresar"><i class="material-icons">arrow_back</i></a>
+Compra #{$sale['sale_id']}</h2>
 
 <h6>Detalle de la fatura</h6>
 <table class="table centered striped" id="detail">
@@ -14,7 +14,7 @@ Compra #{$purchase['purchase_id']}</h2>
 	<tbody id="tbody_purchase">
 	{if $details}
 		{foreach $details as $row}
-			<tr id="tr{$row['purchase_detail_id']}">
+			<tr id="tr{$row['sale_detail_id']}">
 				<td>{$row['product_name']}</td>
 				<td>${$row['detail_price_unit']}</td>
 				<td>{$row['detail_price_unit_bs']} Bs</td>
@@ -25,8 +25,8 @@ Compra #{$purchase['purchase_id']}</h2>
 		<tr class="tr-total">
 			<td colspan="2"></td>
 			<td>Total: </td>
-			<td>{$purchase['purchase_amount_bs']} Bs (Para ese momento)</td>
-			<td>${$purchase['purchase_amount']}</td>
+			<td>{$sale['sale_amount_bs']} Bs (Para ese momento)</td>
+			<td>${$sale['sale_amount']}</td>
 		</tr>
 	{/if}
 	</tbody>

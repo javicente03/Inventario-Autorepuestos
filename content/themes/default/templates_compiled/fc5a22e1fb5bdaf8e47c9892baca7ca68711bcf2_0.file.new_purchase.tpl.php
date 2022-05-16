@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-15 13:53:06
+/* Smarty version 3.1.40, created on 2022-05-16 06:16:19
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\new_purchase.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_628105c2a25248_20342397',
+  'unifunc' => 'content_6281ec3312cf40_89606034',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'fc5a22e1fb5bdaf8e47c9892baca7ca68711bcf2' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\new_purchase.tpl',
-      1 => 1652622731,
+      1 => 1652681776,
       2 => 'file',
     ),
   ),
@@ -21,7 +21,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:_form_image.tpl' => 1,
   ),
 ),false)) {
-function content_628105c2a25248_20342397 (Smarty_Internal_Template $_smarty_tpl) {
+function content_6281ec3312cf40_89606034 (Smarty_Internal_Template $_smarty_tpl) {
 ?><h2>
 <a href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
 /purchases/list" class="btn btn-flat tooltipped" data-position="bottom" data-tooltip="Regresar"><i class="material-icons">arrow_back</i></a>
@@ -77,7 +77,7 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
 			</form>
 
 <h6>Detalles de la factura</h6>
-<table class="table centered" id="detail">
+<table class="table centered striped" id="detail">
 	<thead>	
 		<th>Producto</th>
 		<th>Precio</th>
@@ -97,11 +97,11 @@ $_smarty_tpl->tpl_vars['row']->do_else = false;
 ">
 				<td><?php echo $_smarty_tpl->tpl_vars['row']->value['product_name'];?>
 </td>
-				<td><?php echo $_smarty_tpl->tpl_vars['row']->value['detail_price_unit'];?>
+				<td>$<?php echo $_smarty_tpl->tpl_vars['row']->value['detail_price_unit'];?>
 </td>
 				<td><?php echo $_smarty_tpl->tpl_vars['row']->value['detail_quantity'];?>
 </td>
-				<td><?php echo $_smarty_tpl->tpl_vars['row']->value['detail_sub_total'];?>
+				<td>$<?php echo $_smarty_tpl->tpl_vars['row']->value['detail_sub_total'];?>
 </td>
 				<td><button class="btn btn-flat js_button" data-url="core/purchases.php?do=desc&purchase=<?php echo $_smarty_tpl->tpl_vars['purchase']->value['purchase_id'];?>
 " data-id="<?php echo $_smarty_tpl->tpl_vars['row']->value['purchase_detail_id'];?>
@@ -113,14 +113,18 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
 	<?php }?>
 	</tbody>
 </table>
-<h6>Total: $<span id="total_balance"><?php echo $_smarty_tpl->tpl_vars['sum_details']->value['balance'];?>
+<div class="div-total-balance">
+	<h6 class="total-balance">Total: $<span id="total_balance"><?php echo $_smarty_tpl->tpl_vars['sum_details']->value['balance'];?>
 </span></h6>
+</div>
 
   <!-- Modal Structure -->
 <div id="modal1" class="modal">
     <div class="modal-content">
-      <h4>Agregar Producto</h4>
-      <button data-target="modal2" class="btn bt-flat modal-trigger"><i class="material-icons left">search</i></button>
+      <div style="display:flex;justify-content:space-between;">
+      	<h4>Agregar Producto</h4>
+	      <button data-target="modal2" class="btn bt-flat modal-trigger"><i class="material-icons left">search</i></button>
+      </div>
       <form class="js_form" id="form_product" data-url="core/products.php?do=new&purchase=<?php echo $_smarty_tpl->tpl_vars['purchase']->value['purchase_id'];?>
 ">
       	<div class="row">
@@ -132,13 +136,16 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
 						<input type="text" name="marca" id="marca" placeholder="Marca (*)">
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="text" name="price" id="price" placeholder="Precio Proveedor(*)">
+						<input type="number" step="0.1" name="price" id="price">
+						<span>Precio Proveedor (*)</span>
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="text" name="price_sale" id="price_sale" placeholder="Precio Venta (*)">
+						<input type="number" step="0.1" name="price_sale" id="price_sale">
+						<span>Precio Venta (*)</span>
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="number" name="quantity" id="quantity" placeholder="Cantidad a Ingresar (*)">
+						<input type="number" name="quantity" id="quantity">
+						<span>Cantidad a Ingresar (*)</span>
 					</div>
 					<div class="input-field col s12 m6" id="cont-category">
 						<?php if ($_smarty_tpl->tpl_vars['categories']->value) {?>
@@ -156,8 +163,10 @@ $_smarty_tpl->tpl_vars['row']->do_else = false;
 }
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
 							</select>
+							<label for="quantity">Categoría (*)</label>
+						<?php } else { ?>
+							<span>Debe cargar categorías</span>
 						<?php }?>
-						<label for="quantity">Categoría (*)</label>
 					</div>
 					<div class="input-field col s12 m6" id="cont-photo">
 						<div class="container-uploader" data-id="photo-product">
@@ -182,7 +191,7 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
     <div class="modal-content">
       <h6>Buscar Producto</h6>
       
-    <table class="table centered" id="datatable">
+    <table class="table centered striped" id="datatable">
 	<thead>
 		<th>Nombre</th>
 		<th>Marca</th>

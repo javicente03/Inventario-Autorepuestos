@@ -1,7 +1,7 @@
 <h2>Lista de Categorías</h2>
 <a href="{$base_url}/categories/new" class="btn indigo darken-4"><i class="material-icons left">local_shipping</i>Registrar</a>
 
-<table class="table centered" id="table">
+<table class="table centered striped" id="table">
 	<thead>
 		<th>Nombre</th>
 		<th>Editar</th>
