@@ -25,7 +25,7 @@
 					<td>${$row['product_price_sale']}</td>
 					<td>{$row['product_price_sale_bs']} Bs</td>
 					<td><img width="100px" src="{$base_url}/content/uploads/{$row['product_image']}"></td>
-					<td>{$row['product_quantity']}</td>
+					<td><span {if $row['product_quantity'] < 5 } class="danger" {/if}>{$row['product_quantity']}<span></td>
 					<td><a class="btn btn-flat" href="{$base_url}/products/edit/{$row['product_id']}"><i class="material-icons">edit</i></a></td>
 					<td><a class="btn btn-flat" href="{$base_url}/products/detail/{$row['product_id']}"><i class="material-icons">visibility</i></a></td>
 				</tr>

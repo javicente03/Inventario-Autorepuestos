@@ -11,7 +11,7 @@
 		<img class="responsive-img product_image" src="{$base_url}/content/uploads/{$product['product_image']}">
 	</div>
 	<div class="col s12 m6 center">
-		<h6>Stock Actual: {$product['product_quantity']}</h6>
+		<h6 {if $product['product_quantity'] < 5 } class="danger" {/if}>Stock Actual: {$product['product_quantity']}</h6>
 	</div>
 	<div class="col s12 m6 center">
 		<h6>Marca: {$product['product_marca']}</h6>

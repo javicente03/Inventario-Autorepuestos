@@ -5,7 +5,7 @@
 <div class="container">
 	<div class="row container-center">
 		<div class="col s12 m6 z-depth-3">
-			<h2>Instalación</h2>
+			<h2>Instalación V.1.0</h2>
 			<span>Registra un usuario</span>
 			<form class="js_form" data-url="core/install.php">
 				<div class="row">

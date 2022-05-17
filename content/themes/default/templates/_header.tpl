@@ -52,13 +52,14 @@
 
 
 
+{if $user->_logged_in}
 
 <div class="fixed-action-btn">
-  <a class="btn-floating btn-large red">
+  <a class="btn-floating btn-large indigo darken-4">
     <i class="large material-icons">account_circle</i>
   </a>
   <ul>
     <li><a href="{$base_url}/signout" class="btn-floating red tooltipped" data-position="left" data-tooltip="Cerrar Sesión"><i class="material-icons">close</i></a></li>
   </ul>
 </div>
-      
+{/if}

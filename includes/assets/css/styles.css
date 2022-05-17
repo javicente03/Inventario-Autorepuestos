@@ -39,6 +39,11 @@ body{
     text-align: center;
 }
 
+.danger {
+    color: red;
+    font-weight: bold;
+}
+
 .div-dash {
     height: 500px;
     overflow: scroll;
@@ -60,6 +65,11 @@ body{
   border-radius: .5em;
   display: inline-block;
   text-align: center;
+}
+
+.link-table {
+    color: #1a237e;
+    font-weight: bold;
 }
 
 .input-field label {
@@ -104,6 +114,12 @@ body{
 .div-total-balance {
     display: flex;
     flex-direction: row-reverse;
+}
+
+.td-total {
+    background: #1a237e !important;
+    color: white !important;
+    font-weight: bold !important;
 }
 
 .total-balance {

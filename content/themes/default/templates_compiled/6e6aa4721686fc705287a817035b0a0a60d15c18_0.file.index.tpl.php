@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-16 03:41:04
+/* Smarty version 3.1.40, created on 2022-05-16 15:49:28
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_6281c7d01953d2_93869012',
+  'unifunc' => 'content_62827288d3f363_34369052',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '6e6aa4721686fc705287a817035b0a0a60d15c18' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\index.tpl',
-      1 => 1652672458,
+      1 => 1652716166,
       2 => 'file',
     ),
   ),
@@ -23,7 +23,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:_footer.tpl' => 1,
   ),
 ),false)) {
-function content_6281c7d01953d2_93869012 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62827288d3f363_34369052 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_subTemplateRender("file:_head.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 $_smarty_tpl->_subTemplateRender("file:_header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
@@ -114,8 +114,8 @@ $_smarty_tpl->tpl_vars['row']->do_else = false;
 " class="circle">
 					      <span class="title"><?php echo $_smarty_tpl->tpl_vars['row']->value['product_name'];?>
 </span>
-					      <p>Stock: <?php echo $_smarty_tpl->tpl_vars['row']->value['product_quantity'];?>
- unidades<br>
+					      <p>Stock: <span class="danger"><?php echo $_smarty_tpl->tpl_vars['row']->value['product_quantity'];?>
+ unidades</span><br>
 					      </p>
 					      <a href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
 /products/detail/<?php echo $_smarty_tpl->tpl_vars['row']->value['product_id'];?>

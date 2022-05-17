@@ -15,7 +15,7 @@
     <!-- Meta -->
     <meta name="description" content="{$page_description|truncate:300}">
     <!-- Twitter-Meta -->
-
+    <link rel="icon" href="{$base_url}/includes/assets/img/icon.png">
     <link rel="stylesheet" type="text/css" href="{$base_url}/includes/assets/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="{$base_url}/includes/assets/css/styles.css">
     <link rel="stylesheet" type="text/css" href="{$base_url}/includes/assets/css/datatables.min.css">

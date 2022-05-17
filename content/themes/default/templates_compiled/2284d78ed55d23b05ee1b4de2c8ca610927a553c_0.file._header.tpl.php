@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-16 00:26:07
+/* Smarty version 3.1.40, created on 2022-05-16 16:16:02
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\_header.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_62819a1f930954_62436501',
+  'unifunc' => 'content_628278c2912ba8_04665520',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '2284d78ed55d23b05ee1b4de2c8ca610927a553c' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\_header.tpl',
-      1 => 1652660762,
+      1 => 1652717760,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62819a1f930954_62436501 (Smarty_Internal_Template $_smarty_tpl) {
+function content_628278c2912ba8_04665520 (Smarty_Internal_Template $_smarty_tpl) {
 ?><div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper navcolor fixed">
@@ -88,9 +88,10 @@ function content_62819a1f930954_62436501 (Smarty_Internal_Template $_smarty_tpl)
 
 
 
+<?php if ($_smarty_tpl->tpl_vars['user']->value->_logged_in) {?>
 
 <div class="fixed-action-btn">
-  <a class="btn-floating btn-large red">
+  <a class="btn-floating btn-large indigo darken-4">
     <i class="large material-icons">account_circle</i>
   </a>
   <ul>
@@ -98,5 +99,6 @@ function content_62819a1f930954_62436501 (Smarty_Internal_Template $_smarty_tpl)
 /signout" class="btn-floating red tooltipped" data-position="left" data-tooltip="Cerrar Sesión"><i class="material-icons">close</i></a></li>
   </ul>
 </div>
-      <?php }
+<?php }
+}
 }

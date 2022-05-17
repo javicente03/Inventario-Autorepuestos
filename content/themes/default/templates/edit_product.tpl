@@ -16,11 +16,11 @@
 						<label for="marca">Marca (*)</label>
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="number" step="0.1" name="price" id="price" value="{$product['product_price']}">
+						<input type="number" step="0.01" name="price" id="price" value="{$product['product_price']}">
 						<label for="price">Precio Proveedor (*)</label>
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="number" step="0.1" name="price_sale" id="price_sale" value="{$product['product_price_sale']}">
+						<input type="number" step="0.01" name="price_sale" id="price_sale" value="{$product['product_price_sale']}">
 						<label for="price">Precio Venta (*)</label>
 					</div>
 					<div class="input-field col s12">

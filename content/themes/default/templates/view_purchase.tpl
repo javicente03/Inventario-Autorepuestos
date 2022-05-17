@@ -2,7 +2,19 @@
 <a href="{$base_url}/purchases/list" class="btn btn-flat tooltipped" data-position="bottom" data-tooltip="Regresar"><i class="material-icons">arrow_back</i></a>
 Compra #{$purchase['purchase_id']}</h2>
 
-<h6>Detalle de la fatura</h6>
+<div class="row plantilla">
+	<div class="col s12 m4">
+		<h6>Detalle de la fatura</h6>
+	</div>
+	<div class="col s12 m4">
+		<h6>Proveedor: {$purchase['provider_name']} <a href="{$base_url}/providers/detail/{$purchase['provider_id']}" class="btn btn-flat"><i class="material-icons">visibility</i></a></h6>
+	</div>
+	<div class="col s12 m4">
+		<h6>Fecha: {$purchase['purchase_date']}</h6>
+	</div>
+</div>
+
+
 <table class="table centered striped" id="detail">
 	<thead>	
 		<th>Producto</th>
@@ -24,9 +36,9 @@ Compra #{$purchase['purchase_id']}</h2>
 		{/foreach}
 		<tr class="tr-total">
 			<td colspan="2"></td>
-			<td>Total: </td>
-			<td>{$purchase['purchase_amount_bs']} Bs (Para ese momento)</td>
-			<td>${$purchase['purchase_amount']}</td>
+			<td class="td-total">Total: </td>
+			<td class="td-total">{$purchase['purchase_amount_bs']} Bs (Para ese momento)</td>
+			<td class="td-total">${$purchase['purchase_amount']}</td>
 		</tr>
 	{/if}
 	</tbody>

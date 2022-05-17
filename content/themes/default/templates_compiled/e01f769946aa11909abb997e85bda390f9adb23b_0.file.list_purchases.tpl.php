@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-16 01:01:19
+/* Smarty version 3.1.40, created on 2022-05-16 15:46:15
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\list_purchases.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_6281a25f409c59_19313475',
+  'unifunc' => 'content_628271c7edaac9_70812661',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'e01f769946aa11909abb997e85bda390f9adb23b' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\list_purchases.tpl',
-      1 => 1652662131,
+      1 => 1652715950,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6281a25f409c59_19313475 (Smarty_Internal_Template $_smarty_tpl) {
+function content_628271c7edaac9_70812661 (Smarty_Internal_Template $_smarty_tpl) {
 ?><h2 >Lista de Compras
 
 <?php if ((isset($_smarty_tpl->tpl_vars['get']->value['type']))) {?>
@@ -74,8 +74,10 @@ $_smarty_tpl->tpl_vars['row']->do_else = false;
 							Pendiente
 						<?php }?>
 					</td>
-					<td><?php echo $_smarty_tpl->tpl_vars['row']->value['provider_name'];?>
-</td>
+					<td><a class="link-table" href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
+/providers/detail/<?php echo $_smarty_tpl->tpl_vars['row']->value['provider_id'];?>
+"><?php echo $_smarty_tpl->tpl_vars['row']->value['provider_name'];?>
+</a></td>
 					<td>$<?php echo $_smarty_tpl->tpl_vars['row']->value['purchase_amount'];?>
 </td>
 					<td><?php echo $_smarty_tpl->tpl_vars['row']->value['purchase_amount_bs'];?>

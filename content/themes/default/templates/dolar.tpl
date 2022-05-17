@@ -8,7 +8,7 @@
 			<div class="row">
 				<h4>Modifique la tasa del día</h4>
 				<div class="input-field col s10">
-					<input type="number" name="dolar" value="{$tasa}" step="0.1" style="text-align:center;font-weight:bold;">
+					<input type="number" name="dolar" value="{$tasa}" step="0.01" style="text-align:center;font-weight:bold;">
 				</div>
 				<div class="input-field col s2"><h6>Bs</h6></div>
 

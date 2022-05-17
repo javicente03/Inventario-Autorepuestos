@@ -2,7 +2,18 @@
 <a href="{$base_url}/sales/list" class="btn btn-flat tooltipped" data-position="bottom" data-tooltip="Regresar"><i class="material-icons">arrow_back</i></a>
 Compra #{$sale['sale_id']}</h2>
 
-<h6>Detalle de la fatura</h6>
+<div class="row plantilla">
+	<div class="col s12 m4">
+		<h6>Detalle de la fatura</h6>
+	</div>
+	<div class="col s12 m4">
+		<h6>Cliente: {$sale['client_name']}</h6>
+	</div>
+	<div class="col s12 m4">
+		<h6>Fecha: {$sale['sale_date']}</h6>
+	</div>
+</div>
+
 <table class="table centered striped" id="detail">
 	<thead>	
 		<th>Producto</th>
@@ -24,9 +35,9 @@ Compra #{$sale['sale_id']}</h2>
 		{/foreach}
 		<tr class="tr-total">
 			<td colspan="2"></td>
-			<td>Total: </td>
-			<td>{$sale['sale_amount_bs']} Bs (Para ese momento)</td>
-			<td>${$sale['sale_amount']}</td>
+			<td class="td-total">Total: </td>
+			<td class="td-total">{$sale['sale_amount_bs']} Bs (Para ese momento)</td>
+			<td class="td-total">${$sale['sale_amount']}</td>
 		</tr>
 	{/if}
 	</tbody>

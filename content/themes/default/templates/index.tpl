@@ -53,7 +53,7 @@
 					    <li class="collection-item avatar">
 					      <img src="{$base_url}/content/uploads/{$row['product_image']}" alt="{$row['product_name']}" class="circle">
 					      <span class="title">{$row['product_name']}</span>
-					      <p>Stock: {$row['product_quantity']} unidades<br>
+					      <p>Stock: <span class="danger">{$row['product_quantity']} unidades</span><br>
 					      </p>
 					      <a href="{$base_url}/products/detail/{$row['product_id']}" class="secondary-content tooltipped" data-position="bottom" data-tooltip="Ver Histórico"><i class="material-icons">visibility</i></a>
 					    </li>

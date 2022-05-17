@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-16 05:30:13
+/* Smarty version 3.1.40, created on 2022-05-16 15:54:04
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\detail_product.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_6281e165271cf1_62437125',
+  'unifunc' => 'content_6282739c8e0860_57886228',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '1d3bd11fe3efb4dfdcf8f20ab4733e42d492133c' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\detail_product.tpl',
-      1 => 1652679009,
+      1 => 1652716443,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6281e165271cf1_62437125 (Smarty_Internal_Template $_smarty_tpl) {
+function content_6282739c8e0860_57886228 (Smarty_Internal_Template $_smarty_tpl) {
 ?><div style="display:flex;justify-content:space-between;margin-bottom:10px;">
 	<a href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
 /products/list" class="btn btn-flat tooltipped" data-position="bottom" data-tooltip="Regresar"><i class="material-icons">arrow_back</i></a>
@@ -40,7 +40,7 @@ function content_6281e165271cf1_62437125 (Smarty_Internal_Template $_smarty_tpl)
 ">
 	</div>
 	<div class="col s12 m6 center">
-		<h6>Stock Actual: <?php echo $_smarty_tpl->tpl_vars['product']->value['product_quantity'];?>
+		<h6 <?php if ($_smarty_tpl->tpl_vars['product']->value['product_quantity'] < 5) {?> class="danger" <?php }?>>Stock Actual: <?php echo $_smarty_tpl->tpl_vars['product']->value['product_quantity'];?>
 </h6>
 	</div>
 	<div class="col s12 m6 center">

@@ -41,7 +41,7 @@
 							Pendiente
 						{/if}
 					</td>
-					<td>{$row['provider_name']}</td>
+					<td><a class="link-table" href="{$base_url}/providers/detail/{$row['provider_id']}">{$row['provider_name']}</a></td>
 					<td>${$row['purchase_amount']}</td>
 					<td>{$row['purchase_amount_bs']} Bs</td>
 					<td>{$row['purchase_method']}</td>

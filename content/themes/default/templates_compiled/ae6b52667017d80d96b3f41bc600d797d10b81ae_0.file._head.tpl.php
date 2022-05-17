@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-16 06:10:09
+/* Smarty version 3.1.40, created on 2022-05-16 16:06:55
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\_head.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_6281eac19523c7_78513944',
+  'unifunc' => 'content_6282769f6e1e79_53775315',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'ae6b52667017d80d96b3f41bc600d797d10b81ae' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\_head.tpl',
-      1 => 1652681408,
+      1 => 1652717199,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6281eac19523c7_78513944 (Smarty_Internal_Template $_smarty_tpl) {
+function content_6282769f6e1e79_53775315 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_checkPlugins(array(0=>array('file'=>'C:\\xampp\\htdocs\\Casper\\includes\\libs\\Smarty\\plugins\\modifier.truncate.php','function'=>'smarty_modifier_truncate',),));
 ?>
 <!doctype html>
@@ -42,7 +42,8 @@ $_smarty_tpl->_checkPlugins(array(0=>array('file'=>'C:\\xampp\\htdocs\\Casper\\i
     <meta name="description" content="<?php echo smarty_modifier_truncate($_smarty_tpl->tpl_vars['page_description']->value,300);?>
 ">
     <!-- Twitter-Meta -->
-
+    <link rel="icon" href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
+/includes/assets/img/icon.png">
     <link rel="stylesheet" type="text/css" href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
 /includes/assets/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>

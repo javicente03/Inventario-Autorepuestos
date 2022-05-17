@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-16 00:51:31
+/* Smarty version 3.1.40, created on 2022-05-16 15:43:48
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\list_sales.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_6281a013ca5646_66335351',
+  'unifunc' => 'content_62827134c88e50_56363368',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '524113ce88099f27fe1beca9e319018b8e431971' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\list_sales.tpl',
-      1 => 1652662136,
+      1 => 1652715825,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6281a013ca5646_66335351 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62827134c88e50_56363368 (Smarty_Internal_Template $_smarty_tpl) {
 ?><h2>Lista de Ventas
 
 <?php if ((isset($_smarty_tpl->tpl_vars['get']->value['type']))) {?>

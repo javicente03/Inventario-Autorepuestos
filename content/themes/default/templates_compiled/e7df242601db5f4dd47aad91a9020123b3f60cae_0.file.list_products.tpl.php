@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.40, created on 2022-05-16 06:11:31
+/* Smarty version 3.1.40, created on 2022-05-16 15:51:36
   from 'C:\xampp\htdocs\Casper\content\themes\default\templates\list_products.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.40',
-  'unifunc' => 'content_6281eb131270f5_21232459',
+  'unifunc' => 'content_6282730886f816_41057187',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'e7df242601db5f4dd47aad91a9020123b3f60cae' => 
     array (
       0 => 'C:\\xampp\\htdocs\\Casper\\content\\themes\\default\\templates\\list_products.tpl',
-      1 => 1652681489,
+      1 => 1652716295,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6281eb131270f5_21232459 (Smarty_Internal_Template $_smarty_tpl) {
+function content_6282730886f816_41057187 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_checkPlugins(array(0=>array('file'=>'C:\\xampp\\htdocs\\Casper\\includes\\libs\\Smarty\\plugins\\modifier.truncate.php','function'=>'smarty_modifier_truncate',),));
 ?>
 <h2 <?php if ($_smarty_tpl->tpl_vars['products']->value) {?>class="title-table"<?php }?>>Lista de Productos</h2>
@@ -64,8 +64,8 @@ $_smarty_tpl->tpl_vars['row']->do_else = false;
 					<td><img width="100px" src="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
 /content/uploads/<?php echo $_smarty_tpl->tpl_vars['row']->value['product_image'];?>
 "></td>
-					<td><?php echo $_smarty_tpl->tpl_vars['row']->value['product_quantity'];?>
-</td>
+					<td><span <?php if ($_smarty_tpl->tpl_vars['row']->value['product_quantity'] < 5) {?> class="danger" <?php }?>><?php echo $_smarty_tpl->tpl_vars['row']->value['product_quantity'];?>
+<span></td>
 					<td><a class="btn btn-flat" href="<?php echo $_smarty_tpl->tpl_vars['base_url']->value;?>
 /products/edit/<?php echo $_smarty_tpl->tpl_vars['row']->value['product_id'];?>
 "><i class="material-icons">edit</i></a></td>

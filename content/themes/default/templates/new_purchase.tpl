@@ -85,11 +85,11 @@ Nueva Factura</h2>
 						<input type="text" name="marca" id="marca" placeholder="Marca (*)">
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="number" step="0.1" name="price" id="price">
+						<input type="number" step="0.01" name="price" id="price">
 						<span>Precio Proveedor (*)</span>
 					</div>
 					<div class="input-field col s12 m6">
-						<input type="number" step="0.1" name="price_sale" id="price_sale">
+						<input type="number" step="0.01" name="price_sale" id="price_sale">
 						<span>Precio Venta (*)</span>
 					</div>
 					<div class="input-field col s12 m6">
