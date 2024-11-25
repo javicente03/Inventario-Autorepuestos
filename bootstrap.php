@@ -44,8 +44,23 @@ $DateTime = new DateTime();
 $DateTime->add(new DateInterval('PT' . $minutes_to_add . 'M'));
 $date = $DateTime->format('Y-m-d H:i:s');
 
+// requerir dotenv
+require_once(ABSPATH . 'includes/libs/vendor/autoload.php');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+define("DB_NAME", $_ENV['DB_NAME']);
+define("DB_USER", $_ENV['DB_USER']);
+define("DB_PASSWORD", $_ENV['DB_PASSWORD']);
+define("DB_HOST", $_ENV['DB_HOST']);
+define("DB_PORT", $_ENV['DB_PORT']);
+define("SYS_URL", $_ENV['SYS_URL']);
+define("DEBUGGING", $_ENV['DEBUGGING']);
+define("DEFAULT_LOCALE", $_ENV['DEFAULT_LOCALE']);
+define("LICENCE_KEY", $_ENV['LICENCE_KEY']);
+define("SYS_NAME", $_ENV['SYS_NAME']);
 // connect to the database
-$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
+// $db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
+$db = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME'], $_ENV['DB_PORT']);
 $db->set_charset('utf8mb4');
 if (mysqli_connect_error()) {
     _error("DB_ERROR");
