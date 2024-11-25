@@ -4,7 +4,7 @@
     define("DB_PASSWORD", '');
     define("DB_HOST", 'localhost');
     define("DB_PORT", '3306');
-    define("SYS_URL", 'http://localhost/casper');
+    define("SYS_URL", 'http://localhost/casper/Inventario-Autorepuestos');
     define("DEBUGGING", false);
     define("DEFAULT_LOCALE", 'en_us');
     define("LICENCE_KEY", '');
