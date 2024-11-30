@@ -34,6 +34,18 @@ Nueva Factura</h2>
 						<a class="waves-effect waves-light btn indigo darken-4 modal-trigger" href="#modal1">
 						<i class="material-icons left">shopping_cart</i>Añadir al carrito</a>
 					</div>
+					<div class="input-field col s12 m4">
+						<select name="purchase_type_payment" id="purchase_type_payment">
+							<option value="contado">Contado</option>
+							<option value="credito">Crédito</option>
+						</select>
+						<label for="purchase_type_payment">Tipo de Pago</label>
+					</div>
+					
+					<div class="input-field col s12 m4" id="days_payment_credit_div" style="display:none;">
+						<input type="number" name="days_payment_credit" id="days_payment_credit">
+						<label for="days_payment_credit">Días de Crédito</label>
+					</div>
 					
 					<div class="input-field col s12 center">
 						<button type="submit" class="btn-op">Facturar</button>

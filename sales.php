@@ -24,7 +24,9 @@ try {
                     case 'status':
                         $sales = $user->get_sales($_GET['page'], $_GET['type']);
                         break;
-
+                    case 'type':
+                        $sales = $user->get_sales($_GET['page'], $_GET['type']);
+                        break;
                     default:
                         _error('404');
                         break;

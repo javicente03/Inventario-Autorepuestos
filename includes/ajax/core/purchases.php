@@ -76,6 +76,14 @@ try {
 			return_json(array('callback' => 'location.href = "'.SYS_URL.'/purchases/list'.'"'));
 			break;
 
+		case 'check_credit_payment':
+			if(!isset($_POST['id']))
+				return_json(array('error' => true, 'message' => 'Data inválida, por favor recargue la página'));
+
+			$user->check_credit_payment_purchase($_POST['id']);
+			return_json(array('callback' => 'window.location.reload();'));
+			break;
+
 		case 'delete':
 			if(!isset($_POST['id']))
 				return_json(array('error' => true, 'message' => 'Data inválida, por favor recargue la página'));

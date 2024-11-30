@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-05-2022 a las 08:05:06
--- Versión del servidor: 10.4.22-MariaDB
--- Versión de PHP: 7.3.28
+-- Tiempo de generación: 30-11-2024 a las 19:31:08
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `categories` (
   `category_id` int(11) NOT NULL,
   `category_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -42,7 +42,7 @@ CREATE TABLE `clients` (
   `client_id` int(11) NOT NULL,
   `client_name` varchar(255) NOT NULL,
   `client_contact` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -63,7 +63,7 @@ CREATE TABLE `products` (
   `product_price_bs` decimal(13,2) NOT NULL,
   `product_price_sale` decimal(13,2) NOT NULL,
   `product_price_sale_bs` decimal(13,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -76,7 +76,7 @@ CREATE TABLE `providers` (
   `provider_name` varchar(255) NOT NULL,
   `provider_ubication` varchar(255) NOT NULL,
   `provider_contact` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -94,8 +94,11 @@ CREATE TABLE `purchases` (
   `purchase_method` varchar(64) NOT NULL,
   `purchase_invoice` varchar(20) NOT NULL,
   `purchase_user` int(11) NOT NULL,
-  `purchase_status` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `purchase_status` tinyint(1) NOT NULL DEFAULT 0,
+  `purchase_type_payment` varchar(255) NOT NULL DEFAULT 'contado',
+  `credit_payment` tinyint(1) NOT NULL DEFAULT 0,
+  `days_payment_credit` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -111,7 +114,7 @@ CREATE TABLE `purchase_detail` (
   `detail_sub_total` decimal(13,2) NOT NULL,
   `purchase_id` int(11) NOT NULL,
   `detail_price_unit_bs` decimal(13,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -126,8 +129,11 @@ CREATE TABLE `sales` (
   `sale_amount` decimal(13,2) NOT NULL,
   `sale_user` int(11) NOT NULL,
   `sale_amount_bs` decimal(13,2) NOT NULL,
-  `sale_status` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `sale_status` tinyint(1) NOT NULL DEFAULT 0,
+  `sale_type_payment` varchar(255) NOT NULL DEFAULT 'contado',
+  `credit_payment` tinyint(1) NOT NULL DEFAULT 0,
+  `days_payment_credit` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -143,7 +149,7 @@ CREATE TABLE `sale_detail` (
   `detail_sub_total` decimal(13,2) NOT NULL,
   `sale_id` int(11) NOT NULL,
   `detail_price_unit_bs` decimal(13,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -155,15 +161,15 @@ CREATE TABLE `system_option` (
   `option_id` int(11) NOT NULL,
   `option_name` varchar(64) NOT NULL,
   `option_value` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `system_option`
 --
 
 INSERT INTO `system_option` (`option_id`, `option_name`, `option_value`) VALUES
-(1, 'install', '0'),
-(2, 'tasa_dolar', '4.5');
+(1, 'install', '1'),
+(2, 'tasa_dolar', '48');
 
 -- --------------------------------------------------------
 
@@ -180,7 +186,7 @@ CREATE TABLE `users` (
   `user_active` tinyint(1) NOT NULL DEFAULT 1,
   `user_admin` tinyint(1) NOT NULL DEFAULT 0,
   `user_created_at` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Índices para tablas volcadas

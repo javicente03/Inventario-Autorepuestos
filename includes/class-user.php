@@ -996,8 +996,53 @@ class User
      * 
      * */
 
+     function days_remaining($purchase_date, $days_payment_credit){
+        global $date;
+
+        $purchase_date = new DateTime($purchase_date);
+        $purchase_date->modify('+'.$days_payment_credit.' day');
+        $purchase_date = $purchase_date->format('Y-m-d');
+
+        $date = new DateTime($date);
+        $date = $date->format('Y-m-d');
+
+        $datetime1 = date_create($date);
+        $datetime2 = date_create($purchase_date);
+        $interval = date_diff($datetime1, $datetime2);
+
+        return $interval->format('%R%a días');
+    }
+
+    function days_remaining_is_less_5($purchase_date, $days_payment_credit){
+        global $date;
+
+        $purchase_date = new DateTime($purchase_date);
+        $purchase_date->modify('+'.$days_payment_credit.' day');
+        $purchase_date = $purchase_date->format('Y-m-d');
+
+        $date = new DateTime($date);
+        $date = $date->format('Y-m-d');
+
+        $datetime1 = date_create($date);
+        $datetime2 = date_create($purchase_date);
+        $interval = date_diff($datetime1, $datetime2);
+
+        if($interval->format('%R%a') < 5)
+            return true;
+        else
+            return false;
+    }
+
+    function Get_Date_Limit($purchase_date, $days_payment_credit){
+        $purchase_date = new DateTime($purchase_date);
+        $purchase_date->modify('+'.$days_payment_credit.' day');
+        $purchase_date = $purchase_date->format('Y-m-d');
+
+        return $purchase_date;
+    }
+
     public function get_purchases($page=null, $type=null){
-        global $db;
+        global $db, $date;
 
         $purchases = [];
 
@@ -1006,6 +1051,13 @@ class User
         } else {
             if($type == 'status')
                 $where = "WHERE purchase_status = ".$page;
+            else if ($type == 'type') {
+                if ($page == 0) {
+                    $where = "WHERE purchase_type_payment = 'contado' and purchase_status = 1";
+                } else {
+                    $where = "WHERE purchase_type_payment = 'credito' and purchase_status = 1";
+                }
+            }
 
             $get_purchases = $db->query("SELECT * FROM purchases LEFT JOIN providers ON purchases.purchase_provider = providers.provider_id LEFT JOIN users ON purchases.purchase_user = users.user_id ".$where);
         }
@@ -1014,6 +1066,19 @@ class User
         if($get_purchases->num_rows > 0){
             while($row = $get_purchases->fetch_assoc()){
                 $purchases[] = $row;
+            }
+        }
+
+        for ($i=0; $i < count($purchases); $i++) {
+            if ($purchases[$i]['purchase_type_payment'] == 'credito') {
+                // Obtener dias restantes para pagar a partir de la fecha de compra (purchase_date), los dias de credito (days_payment_credit) y la fecha actual
+                $purchases[$i]['days_remaining'] = $this->days_remaining($purchases[$i]['purchase_date'], $purchases[$i]['days_payment_credit']);
+                $purchases[$i]['days_remaining_is_less_5'] = $this->days_remaining_is_less_5($purchases[$i]['purchase_date'], $purchases[$i]['days_payment_credit']);
+                $purchases[$i]['date_limit'] = $this->Get_Date_Limit($purchases[$i]['purchase_date'], $purchases[$i]['days_payment_credit']);
+            } else {
+                $purchases[$i]['days_remaining'] = 'N/A';
+                $purchases[$i]['days_remaining_is_less_5'] = false;
+                $purchases[$i]['date_limit'] = 'N/A';
             }
         }
 
@@ -1051,6 +1116,17 @@ class User
         $get_purchase = $db->query(sprintf("SELECT * FROM purchases LEFT JOIN providers ON purchases.purchase_provider = providers.provider_id WHERE purchase_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
 
         $purchase = $get_purchase->fetch_assoc();
+
+        if ($purchase['purchase_type_payment'] == 'credito' && $purchase['purchase_status'] == 1) {
+            // Obtener dias restantes para pagar a partir de la fecha de compra (purchase_date), los dias de credito (days_payment_credit) y la fecha actual
+            $purchase['days_remaining'] = $this->days_remaining($purchase['purchase_date'], $purchase['days_payment_credit']);
+            $purchase['days_remaining_is_less_5'] = $this->days_remaining_is_less_5($purchase['purchase_date'], $purchase['days_payment_credit']);
+            $purchase['date_limit'] = $this->Get_Date_Limit($purchase['purchase_date'], $purchase['days_payment_credit']);
+        } else {
+            $purchase['days_remaining'] = 'N/A';
+            $purchase['days_remaining_is_less_5'] = false;
+            $purchase['date_limit'] = 'N/A';
+        }
 
         return $purchase;
     }
@@ -1162,6 +1238,17 @@ class User
         if(is_empty($args['provider']) || is_empty($args['date']))
             throw new Exception("Debe completar todos los datos obligatorios (*)");
 
+        if ($args['purchase_type_payment'] != 'contado' && $args['purchase_type_payment'] != 'credito')
+            throw new Exception("Tipo de pago inválido");
+
+        if ($args['purchase_type_payment'] == 'credito')
+            if (is_empty($args['days_payment_credit']))
+                throw new Exception("Debe completar los días de crédito");
+            else if (!is_numeric($args['days_payment_credit']))
+                throw new Exception("Los días de crédito deben ser numéricos");
+            else if ($args['days_payment_credit'] < 1)
+                throw new Exception("Los días de crédito deben ser mayor a 0");
+
         if(!$this->get_provider($args['provider']))
             throw new Exception("Proveedor inválido");
 
@@ -1183,7 +1270,10 @@ class User
                         secure($value['product_id']))) or _error("SQL_ERROR_THROWEN");
         }
 
-        $db->query(sprintf("UPDATE purchases SET purchase_provider = %s, purchase_date = %s, purchase_invoice = %s, purchase_method = %s, purchase_amount = %s, purchase_amount_bs = %s, purchase_status =%s WHERE purchase_id = %s", 
+        $db->query(sprintf("UPDATE purchases SET purchase_provider = %s, purchase_date = %s, purchase_invoice = %s, 
+                            purchase_method = %s, purchase_amount = %s, purchase_amount_bs = %s, purchase_status =%s, 
+                            purchase_type_payment = %s, days_payment_credit = %s
+                            WHERE purchase_id = %s", 
             secure($args['provider']),
             secure($args['date']),
             secure($args['invoice']),
@@ -1191,6 +1281,9 @@ class User
             secure($balance['balance']),
             secure($balance_bs),
             secure(true),
+            secure($args['purchase_type_payment']),
+            // Si es contado se le asigna 0 días de crédito
+            secure($args['purchase_type_payment'] == 'contado' ? 0 : $args['days_payment_credit']),
             secure($id))) or _error("SQL_ERROR_THROWEN");
     }
 
@@ -1214,6 +1307,32 @@ class User
         $db->query("DELETE FROM purchases WHERE purchase_id = $id") or _error('SQL_ERROR_THROWEN');
     }
 
+    /**
+     * 
+     * Check Credit Payment Purchase
+     * 
+     * */
+
+    public function check_credit_payment_purchase($id){
+        global $db, $date;
+        
+        $purchase = $this->get_purchase($id);
+
+        if(!$purchase)
+            throw new Exception('Compra inválida');
+
+        if($purchase['purchase_type_payment'] != 'credito')
+            throw new Exception('Esta compra no es a crédito');
+
+        if ($purchase['credit_payment'])
+            throw new Exception('Esta compra ya fue pagada');
+
+        $db->query(sprintf("
+            UPDATE purchases SET credit_payment = %s WHERE purchase_id = %s",
+            secure(true),
+            secure($id))) or _error('SQL_ERROR_THROWEN');
+    }
+
     /***************************************
      * 
      * SALES
@@ -1227,7 +1346,7 @@ class User
      * */
 
     public function get_sales($page=null, $type=null){
-        global $db;
+        global $db, $date;
 
         $sales = [];
 
@@ -1236,6 +1355,13 @@ class User
         } else {
             if($type == 'status')
                 $where = "WHERE sale_status = ".$page;
+            else if ($type == 'type') {
+                if ($page == 0) {
+                    $where = "WHERE sale_type_payment = 'contado' and sale_status = 1";
+                } else {
+                    $where = "WHERE sale_type_payment = 'credito' and sale_status = 1";
+                }
+            }
 
             $get_sales = $db->query("SELECT * FROM sales LEFT JOIN clients ON sales.sale_client = clients.client_id LEFT JOIN users ON sales.sale_user = users.user_id ".$where);
         }
@@ -1246,6 +1372,19 @@ class User
                 $sales[] = $row;
             }
         }
+
+        for ($i=0; $i < count($sales); $i++) {
+            if ($sales[$i]['sale_type_payment'] == 'credito') {
+                // Obtener dias restantes para pagar a partir de la fecha de compra (sale_date), los dias de credito (days_payment_credit) y la fecha actual
+                $sales[$i]['days_remaining'] = $this->days_remaining($sales[$i]['sale_date'], $sales[$i]['days_payment_credit']);
+                $sales[$i]['days_remaining_is_less_5'] = $this->days_remaining_is_less_5($sales[$i]['sale_date'], $sales[$i]['days_payment_credit']);
+                $sales[$i]['date_limit'] = $this->Get_Date_Limit($sales[$i]['sale_date'], $sales[$i]['days_payment_credit']);
+            } else {
+                $sales[$i]['days_remaining'] = 'N/A';
+                $sales[$i]['days_remaining_is_less_5'] = false;
+                $sales[$i]['date_limit'] = 'N/A';
+            }
+        }        
 
         return $sales;
     }
@@ -1281,6 +1420,17 @@ class User
         $get_sale = $db->query(sprintf("SELECT * FROM sales LEFT JOIN clients ON sales.sale_client = clients.client_id WHERE sale_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
 
         $sale = $get_sale->fetch_assoc();
+
+        if ($sale['sale_type_payment'] == 'credito' && $sale['sale_status'] == 1) {
+            // Obtener dias restantes para pagar a partir de la fecha de compra (sale_date), los dias de credito (days_payment_credit) y la fecha actual
+            $sale['days_remaining'] = $this->days_remaining($sale['sale_date'], $sale['days_payment_credit']);
+            $sale['days_remaining_is_less_5'] = $this->days_remaining_is_less_5($sale['sale_date'], $sale['days_payment_credit']);
+            $sale['date_limit'] = $this->Get_Date_Limit($sale['sale_date'], $sale['days_payment_credit']);
+        } else {
+            $sale['days_remaining'] = 'N/A';
+            $sale['days_remaining_is_less_5'] = false;
+            $sale['date_limit'] = 'N/A';
+        }
 
         return $sale;
     }
@@ -1408,6 +1558,17 @@ class User
                 throw new Exception("Cliente no encontrado");
         }
 
+        if ($args['sale_type_payment'] != 'contado' && $args['sale_type_payment'] != 'credito')
+            throw new Exception("Tipo de pago inválido");
+
+        if ($args['sale_type_payment'] == 'credito')
+            if (is_empty($args['days_payment_credit']))
+                throw new Exception("Debe completar los días de crédito");
+            else if (!is_numeric($args['days_payment_credit']))
+                throw new Exception("Los días de crédito deben ser numéricos");
+            else if ($args['days_payment_credit'] < 1)
+                throw new Exception("Los días de crédito deben ser mayor a 0");
+
         $get_balance = $db->query(sprintf("SELECT SUM(detail_sub_total) AS balance FROM sale_detail WHERE sale_id = %s", secure($id))) or _error("SQL_ERROR_THROWEN");
 
         $balance = $get_balance->fetch_assoc();
@@ -1425,12 +1586,18 @@ class User
                         secure($value['product_id']))) or _error("SQL_ERROR_THROWEN");
         }
 
-        $db->query(sprintf("UPDATE sales SET sale_client = %s, sale_date = %s, sale_amount = %s, sale_amount_bs = %s, sale_status =%s WHERE sale_id = %s", 
+        $db->query(sprintf("UPDATE sales SET sale_client = %s, sale_date = %s, 
+                            sale_amount = %s, sale_amount_bs = %s, 
+                            sale_status =%s, sale_type_payment = %s, days_payment_credit = %s
+                            WHERE sale_id = %s", 
             secure($args['hd_client_id']),
             secure($date),
             secure($balance['balance']),
             secure($balance_bs),
             secure(true),
+            secure($args['sale_type_payment']),
+            // Si es contado se le asigna 0 días de crédito
+            secure($args['sale_type_payment'] == 'contado' ? 0 : $args['days_payment_credit']),
             secure($id))) or _error("SQL_ERROR_THROWEN");
     }
 
@@ -1452,6 +1619,32 @@ class User
             throw new Exception('Esta venta ya fue concretada, no puede eliminarse');
 
         $db->query("DELETE FROM sales WHERE sale_id = $id") or _error('SQL_ERROR_THROWEN');
+    }
+
+    /**
+     * 
+     * Check Credit Payment Sale
+     * 
+     * */
+
+    public function check_credit_payment_sale($id){
+        global $db, $date;
+        
+        $sale = $this->get_sale($id);
+
+        if(!$sale)
+            throw new Exception('Venta inválida');
+
+        if($sale['sale_type_payment'] != 'credito')
+            throw new Exception('Esta venta no es a crédito');
+
+        if ($sale['credit_payment'])
+            throw new Exception('Esta venta ya fue pagada');
+
+        $db->query(sprintf("
+            UPDATE sales SET credit_payment = %s WHERE sale_id = %s",
+            secure(true),
+            secure($id))) or _error('SQL_ERROR_THROWEN');
     }
 }
 

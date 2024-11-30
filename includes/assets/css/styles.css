@@ -145,3 +145,11 @@ table {
     box-shadow: black 2px 3px 13px;
     border-radius: 1em;
 }
+
+.red-text {
+    font-weight: bold !important;
+}
+
+.green-text {
+    font-weight: bold !important;
+}

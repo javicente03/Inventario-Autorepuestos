@@ -101,3 +101,45 @@ $('body').on('click', '.js_button_new_client', function(){
     $("#hd_client_type").val('new')
     $("#client_span").html($("#client_name").val());
 })
+
+// el select #purchase_type_payment al cambiar el valor a credito coloca el #days_payment_credit_div display block, de lo contrario display none
+$('#purchase_type_payment').on('change', function(){
+    if($(this).val() == 'credito'){
+        $('#days_payment_credit_div').css('display', 'block');
+    } else {
+        $('#days_payment_credit_div').css('display', 'none');
+    }
+})
+
+$('#sale_type_payment').on('change', function(){
+    if($(this).val() == 'credito'){
+        $('#days_payment_credit_div').css('display', 'block');
+    } else {
+        $('#days_payment_credit_div').css('display', 'none');
+    }
+})
+
+$('body').on('click', '.js_button_confirm', function(){
+    let message = $(this).data('message');
+    let url = $(this).data('url');
+    let id = $(this).data('id');
+
+    if(confirm(message)){
+        $.ajax({
+            url: site_path+'/includes/ajax/'+url,
+            data: {id:id},
+            type: 'POST',
+            enctype: 'x-www-form-urlencoded',
+            success: function(response){
+                if(response.error){
+                    M.toast({html: "Error: "+response.message, classes: 'rounded red'});
+                } else if(response.callback){
+                    eval(response.callback)
+                }
+            },
+            error: function(error){
+                console.log(error)
+            }
+        });
+    }
+})

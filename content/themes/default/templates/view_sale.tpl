@@ -12,6 +12,66 @@ Compra #{$sale['sale_id']}</h2>
 	<div class="col s12 m4">
 		<h6>Fecha: {$sale['sale_date']}</h6>
 	</div>
+
+	<div class="col s12 m4">
+		<h6>Tipo de Pago: <span class="{if $sale['sale_type_payment'] == 'credito'}red-text{else}green-text{/if}">{$sale['sale_type_payment']}</span></h6>
+	</div>
+
+	<div class="col s12 m4">
+		<h6>Fecha de crédito: {$sale['date_limit']}</h6>
+	</div>
+
+	<div class="col s12 m4">
+		<h6>Días de crédito: {$sale['days_payment_credit']}</h6>
+	</div>
+
+	<div class="col s12 m4">
+		<h6>Días de crédito restantes: 
+			<span class="
+				{if $sale['sale_type_payment'] == 'credito' && !$sale['credit_payment']}
+					{if $sale['days_remaining_is_less_5']}
+						red-text
+					{else}
+						green-text
+					{/if}
+				{/if}
+			">
+				{if $sale['sale_type_payment'] == 'credito'}
+					{if !$sale['credit_payment']}
+						{$sale['days_remaining']}
+					{else}
+						<i class="material-icons green-text">check</i>
+					{/if}
+				{else}
+					N/A
+				{/if}
+			</span>
+		</h6>
+	</div>
+
+	<div class="col s12 m4">
+		<h6>Crédito Pagado: 
+			{if $sale['sale_type_payment'] == 'credito'}
+				{if $sale['credit_payment']}
+					<i class="material-icons green-text">check</i>
+				{else}
+					<i class="material-icons red-text">close</i>
+				{/if}
+			{else}
+				N/A
+			{/if}
+		</h6>
+	</div>
+
+	{if $sale['sale_type_payment'] == 'credito' && !$sale['credit_payment']}
+		<div class="col s12 m4">
+			<button class="btn-op js_button_confirm"
+				data-id="{$sale['sale_id']}"
+				data-url="core/sales.php?do=check_credit_payment"
+				data-message="¿Está seguro de pagar el crédito de esta compra?"
+			>Pagar Crédito</button>
+		</div>
+	{/if}
 </div>
 
 <table class="table centered striped" id="detail">

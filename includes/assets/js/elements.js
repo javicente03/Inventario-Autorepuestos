@@ -12,6 +12,8 @@ $(document).ready(function(){
 
 $(document).ready(function() {
         $('#datatable').DataTable({
+            // maximo de registros por pagina 4
+            "pageLength": 10,
             "language": {
                 "lengthMenu": "Display _MENU_ records per page",
                 "zeroRecords": "No hay data encontrada",
