@@ -48,19 +48,46 @@ $date = $DateTime->format('Y-m-d H:i:s');
 require_once(ABSPATH . 'includes/libs/vendor/autoload.php');
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
-define("DB_NAME", $_ENV['DB_NAME']);
-define("DB_USER", $_ENV['DB_USER']);
-define("DB_PASSWORD", $_ENV['DB_PASSWORD']);
-define("DB_HOST", $_ENV['DB_HOST']);
-define("DB_PORT", $_ENV['DB_PORT']);
-define("SYS_URL", $_ENV['SYS_URL']);
-define("DEBUGGING", $_ENV['DEBUGGING']);
-define("DEFAULT_LOCALE", $_ENV['DEFAULT_LOCALE']);
-define("LICENCE_KEY", $_ENV['LICENCE_KEY']);
-define("SYS_NAME", $_ENV['SYS_NAME']);
+// define("DB_NAME", $_ENV['DB_NAME']);
+// define("DB_USER", $_ENV['DB_USER']);
+// define("DB_PASSWORD", $_ENV['DB_PASSWORD']);
+// define("DB_HOST", $_ENV['DB_HOST']);
+// define("DB_PORT", $_ENV['DB_PORT']);
+// define("SYS_URL", $_ENV['SYS_URL']);
+// define("DEBUGGING", $_ENV['DEBUGGING']);
+// define("DEFAULT_LOCALE", $_ENV['DEFAULT_LOCALE']);
+// define("LICENCE_KEY", $_ENV['LICENCE_KEY']);
+// define("SYS_NAME", $_ENV['SYS_NAME']);
 // connect to the database
 // $db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
-$db = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME'], $_ENV['DB_PORT']);
+// $db = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME'], $_ENV['DB_PORT']);
+
+// DB_HOST=mysql.railway.internal
+// DB_NAME=railway
+// DB_PASSWORD=HDflFYbxahQLQQXpeRNBVsJLJnKwRTAK
+// DB_PORT=3306
+// DB_USER=root
+// DEBUGGING=false
+// DEFAULT_LOCALE=en_us
+// LICENCE_KEY=
+// SYS_NAME=Autorepuestos_Casper
+// SYS_URL=https://inventario-autorepuestos-production.up.railway.app/
+
+define("DB_NAME", "railway");
+define("DB_USER", "root");
+define("DB_PASSWORD", "HDflFYbxahQLQQXpeRNBVsJLJnKwRTAK");
+define("DB_HOST", "mysql.railway.internal");
+define("DB_PORT", "3306");
+define("SYS_URL", "https://inventario-autorepuestos-production.up.railway.app/");
+define("DEBUGGING", "false");
+define("DEFAULT_LOCALE", "en_us");
+define("LICENCE_KEY", "");
+define("SYS_NAME", "Autorepuestos_Casper");
+
+echo "DB_NAME: ".DB_NAME."<br>";
+$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
+echo "DB_HOST: ".DB_HOST."<br>";
+
 $db->set_charset('utf8mb4');
 if (mysqli_connect_error()) {
     _error("DB_ERROR");
