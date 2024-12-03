@@ -1,4 +1,4 @@
-.env
+# .env
 /photos
 # no carpeta templates_compiled
 /templates_compiled
