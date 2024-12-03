@@ -62,31 +62,18 @@ $dotenv->load();
 // $db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
 // $db = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME'], $_ENV['DB_PORT']);
 
-// DB_HOST=mysql.railway.internal
-// DB_NAME=railway
-// DB_PASSWORD=HDflFYbxahQLQQXpeRNBVsJLJnKwRTAK
-// DB_PORT=3306
-// DB_USER=root
-// DEBUGGING=false
-// DEFAULT_LOCALE=en_us
-// LICENCE_KEY=
-// SYS_NAME=Autorepuestos_Casper
-// SYS_URL=https://inventario-autorepuestos-production.up.railway.app/
-
 define("DB_NAME", "railway");
 define("DB_USER", "root");
 define("DB_PASSWORD", "HDflFYbxahQLQQXpeRNBVsJLJnKwRTAK");
-define("DB_HOST", "mysql.railway.internal");
-define("DB_PORT", "3306");
-define("SYS_URL", "https://inventario-autorepuestos-production.up.railway.app/");
+define("DB_HOST", "junction.proxy.rlwy.net");
+define("DB_PORT", "33064");
+define("SYS_URL", "https://inventario-autorepuestos-production.up.railway.app");
 define("DEBUGGING", "false");
 define("DEFAULT_LOCALE", "en_us");
 define("LICENCE_KEY", "");
 define("SYS_NAME", "Autorepuestos_Casper");
 
-echo "DB_NAME: ".DB_NAME."<br>";
 $db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
-echo "DB_HOST: ".DB_HOST."<br>";
 
 $db->set_charset('utf8mb4');
 if (mysqli_connect_error()) {
