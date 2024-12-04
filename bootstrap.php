@@ -75,6 +75,8 @@ define("SYS_NAME", "Autorepuestos_Casper");
 
 $db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
 
+echo phpinfo();
+
 $db->set_charset('utf8mb4');
 if (mysqli_connect_error()) {
     _error("DB_ERROR");
